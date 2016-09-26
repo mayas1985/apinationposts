@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="Scripts/jquery-1.8.2.min.js"></script>
+    <script>
+$(document).ready(function(){
+    $("button").click(function(){
+        $.post("/api/user",
+        {
+            UserName: "APITestUser",
+            Password: "APITest"
+        },
+        function(data,status){
+            alert("Data: " + data + "\nStatus: " + status);
+        });
+    });
+});
+    </script>
+</head>
+<body>
+
+    <button>Save User Test</button>
+
+</body>
+</html>
+

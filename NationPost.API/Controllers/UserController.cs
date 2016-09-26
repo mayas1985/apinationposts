@@ -67,6 +67,8 @@ namespace NationPost.API.Controllers
         {
             if (ModelState.IsValid)
             {
+                user.CreatedOn = DateTime.Now;
+                user.UserId = Guid.NewGuid();
                 db.Users.Add(user);
                 db.SaveChanges();
 
