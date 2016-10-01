@@ -22,19 +22,34 @@ namespace NationPost.API.Migrations
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data. E.g.
             //
-            context.Users.AddOrUpdate(
-              p => p.UserId,
-                  new User { UserId = new Guid("02fdad93-2a4c-40d0-bc22-944af629f7c4"), CreatedOn = DateTime.Now, FirstName = "Admin", UserName = "Admin", coords = DbGeography.FromText("POINT(-122.336106 47.605049)"), Password="Admin" }
-                //new Person { FullName = "Andrew Peters" },
-                //new Person { FullName = "Brice Lambson" },
-                //new Person { FullName = "Rowan Miller" }
-            );
-            context.ArticleTypes.AddOrUpdate(
+            //context.Users.AddOrUpdate(
+            //  p => p.UserId,
+            //      new User { UserId = new Guid("02fdad93-2a4c-40d0-bc22-944af629f7c4"), CreatedOn = DateTime.Now, FirstName = "Admin", UserName = "Admin", coords = DbGeography.FromText("POINT(-122.336106 47.605049)"), Password="Admin" }
+            //    //new Person { FullName = "Andrew Peters" },
+            //    //new Person { FullName = "Brice Lambson" },
+            //    //new Person { FullName = "Rowan Miller" }
+            //);
+            var usr = context.Users.FirstOrDefault(k => k.UserId == new Guid("02fdad93-2a4c-40d0-bc22-944af629f7c4"));
+            if (usr != null)
+            {
+                context.Users.Remove(usr);
 
-                j => j.ArticleTypeId,
-                new ArticleType { ArticleTypeId = 1, Name = "News" },
-                new ArticleType { ArticleTypeId = 2, Name = "Opinion" },
-                new ArticleType { ArticleTypeId = 3, Name = "Event" }
+                context.SaveChanges();
+
+            }
+
+            context.Articles.AddOrUpdate(
+                j => j.ArticleId,
+                new Article
+                {
+                    ArticleId = new Guid("20a9102b-696d-45b5-94c9-92889d630b74"),
+                    ArticleTypeId = new ArticleType { ArticleTypeId = 1, Name = "News" },
+                    Body = "Seed data",
+                    CreatedBy = new User { UserId = new Guid("02fdad93-2a4c-40d0-bc22-944af629f7c4"), CreatedOn = DateTime.Now, FirstName = "Admin", UserName = "Admin", coords = DbGeography.FromText("POINT(-122.336106 47.605049)"), Password = "Admin" },
+                    CreatedOn = DateTime.Now,
+                    Description = "Seed data"
+
+                }
                 );
 
             try
@@ -57,6 +72,15 @@ namespace NationPost.API.Migrations
                 throw new Exception(sb.ToString());
             }
 
+            context.ArticleTypes.AddOrUpdate(
+
+                j => j.ArticleTypeId,
+                new ArticleType { ArticleTypeId = 1, Name = "News" },
+                new ArticleType { ArticleTypeId = 2, Name = "Opinion" },
+                new ArticleType { ArticleTypeId = 3, Name = "Event" }
+                );
+
+            context.SaveChanges();
             //
         }
     }

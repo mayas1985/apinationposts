@@ -4,7 +4,7 @@
     <script src="Scripts/jquery-1.8.2.min.js"></script>
     <script>
 $(document).ready(function(){
-    $("button").click(function(){
+    $("#buttonUser").click(function(){
         $.post("/api/user",
         {
             UserName: "APITestUser",
@@ -14,12 +14,28 @@ $(document).ready(function(){
             alert("Data: " + data + "\nStatus: " + status);
         });
     });
+    $("#buttonArticle").click(function () {
+        $.post("/api/articles",
+        {
+            Body: "APITestUser",
+            Title: "APITest",
+            CreatedOn: "23-jun-2016",
+            //CreatedById: "02fdad93-2a4c-40d0-bc22-944af629f7c4",
+            CreatedBy: { "UserId": "02fdad93-2a4c-40d0-bc22-944af629f7c4", "UserName": "dummy", "Password": "dummy" },
+            ArticleTypeId: {"ArticleTypeId":2},
+            //ArticleType:"2"
+        },
+        function (data, status) {
+            alert("Data: " + data + "\nStatus: " + status);
+        });
+    });
 });
     </script>
 </head>
 <body>
 
-    <button>Save User Test</button>
+    <button id="buttonUser">Save User Test</button>
+    <button id="buttonArticle">Save Article Test</button>
 
 </body>
 </html>
