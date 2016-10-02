@@ -5,7 +5,7 @@
     <script>
 $(document).ready(function(){
     $("#buttonUser").click(function(){
-        $.post("/api/user",
+        $.post("http://api.nationposts.com/api/user",
         {
             UserName: "APITestUser",
             Password: "APITest"
@@ -15,7 +15,7 @@ $(document).ready(function(){
         });
     });
     $("#buttonArticle").click(function () {
-        $.post("/api/articles",
+        $.post("http://api.nationposts.com/api/articles",
         {
             Body: "APITestUser",
             Title: "APITest",
