@@ -13,7 +13,6 @@ using NationPost.API.Models;
 
 namespace NationPost.API.Controllers
 {
-    [Route("api/Articles/{id?}", Name = "api_Articles")]
     public class ArticlesController : ApiController
     {
         private APIContext db = new APIContext();
@@ -81,6 +80,8 @@ namespace NationPost.API.Controllers
             {
                 return BadRequest(ModelState);
             }
+            article.ArticleId = Guid.NewGuid();
+            article.CreatedOn = DateTime.Now;
             var user = db.Users.FirstOrDefault(j => j.UserId == article.CreatedBy.UserId);
             if (user != null)
             {
@@ -121,8 +122,10 @@ namespace NationPost.API.Controllers
                     throw;
                 }
             }
-
-            return CreatedAtRoute("api_Articles", new { id = article.ArticleId }, article);
+            //TODO later: fix self referencing loop
+            article.CreatedBy.Articles = null;
+            article.ArticleTypeId.Articles = null;
+            return CreatedAtRoute("Default", new { id = article.ArticleId }, article);
         }
 
         // DELETE api/Articles/5
