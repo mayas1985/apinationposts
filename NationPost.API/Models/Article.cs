@@ -22,6 +22,11 @@ namespace NationPost.API.Models
 
         [MaxLength(250, ErrorMessage = "Only 250 characters are allowed")]
         public String Description { get; set; }
+
+        [MaxLength(250, ErrorMessage = "Only 250 characters are allowed")]
+        public String Summary { get; set; }
+
+
         public String Body { get; set; }
         public bool IsActive { get; set; }
         [Required]

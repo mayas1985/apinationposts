@@ -10,12 +10,60 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using NationPost.API.Context;
 using NationPost.API.Models;
+using PagedList;
 
 namespace NationPost.API.Controllers
 {
     public class ArticlesController : ApiController
     {
         private APIContext db = new APIContext();
+
+        //[Route("api/articles/paged/{pageNumber=pageNumber}/{pageSize=pageSize}/{userId=userId}/{sortOrder=sortOrder}/{searchString=searchString}")]
+        public IEnumerable<Article> GetArticles( int pageNumber, int pageSize,  Guid? userId = null, string sortOrder = "", string searchString = "")
+        {
+
+            if (pageNumber <= 0)
+            {
+                throw new Exception("pagenumber minimum value is 1");
+            }
+
+            if (pageSize <= 0)
+            {
+                throw new Exception("pageSize minimum value is 1");
+            }
+
+            sortOrder = String.IsNullOrEmpty(sortOrder) ? "createdon_desc" : "";
+
+
+            var articles = from s in db.Articles
+                           select s;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                articles = articles.Where(s => s.Title.Contains(searchString)
+                                       || s.Body.Contains(searchString)
+                                       || s.Description.Contains(searchString)
+                                       || s.Summary.Contains(searchString)
+                                       );
+            }
+
+            if (userId != null)
+            {
+                articles = articles.Where(k => k.CreatedBy.UserId == userId);
+            }
+
+            switch (sortOrder)
+            {
+                case "createdon_desc":
+                    articles = articles.OrderByDescending(s => s.CreatedOn);
+                    break;
+
+                default:  // Name ascending 
+                    articles = articles.OrderBy(s => s.CreatedOn);
+                    break;
+            }
+
+            return articles.ToPagedList(pageNumber, pageSize);
+        }
 
         // GET api/Articles
         public IEnumerable<Article> GetArticles()
@@ -103,7 +151,7 @@ namespace NationPost.API.Controllers
             {
                 throw new Exception("Articletype info not found");
             }
-            
+
 
             db.Articles.Add(article);
 
