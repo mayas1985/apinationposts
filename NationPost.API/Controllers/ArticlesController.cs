@@ -19,7 +19,7 @@ namespace NationPost.API.Controllers
         private APIContext db = new APIContext();
 
         //[Route("api/articles/paged/{pageNumber=pageNumber}/{pageSize=pageSize}/{userId=userId}/{sortOrder=sortOrder}/{searchString=searchString}")]
-        public IEnumerable<Article> GetArticles( int pageNumber, int pageSize,  Guid? userId = null, string sortOrder = "", string searchString = "")
+        public IEnumerable<Article> GetArticles(int pageNumber, int pageSize, int articleTypeId, Guid? userId = null, string sortOrder = "", string searchString = "")
         {
 
             if (pageNumber <= 0)
@@ -36,6 +36,7 @@ namespace NationPost.API.Controllers
 
 
             var articles = from s in db.Articles
+                           where s.ArticleTypeId.ArticleTypeId == articleTypeId
                            select s;
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -68,6 +69,7 @@ namespace NationPost.API.Controllers
         // GET api/Articles
         public IEnumerable<Article> GetArticles()
         {
+            //throw new Exception("This would cause all articles to loaded so this api has been stopped");
             return db.Articles;
         }
 

@@ -22,13 +22,16 @@
                     CreatedOn: "23-jun-2016",
                     //CreatedById: "02fdad93-2a4c-40d0-bc22-944af629f7c4",
                     CreatedBy: { "UserId": "02fdad93-2a4c-40d0-bc22-944af629f7c4", "UserName": "dummy", "Password": "dummy" },
-                    ArticleTypeId: { "ArticleTypeId": 2 },
+                    ArticleTypeId: { "ArticleTypeId": $("#isNews").is(":checked") ? 1 : 2 },
                     //ArticleType:"2"
                 },
                 function (data, status) {
                     alert("Data: " + data + "\nStatus: " + status);
                 });
             });
+
+
+
 
             $("#buttonGetArticle").click(function () {
                 $("#res").text('loading');
@@ -37,11 +40,12 @@
                 $.ajax({
                     url: "/api/articles",
                     dataType: "json",
-                    type:"GET",
+                    type: "GET",
                     contentType: "application/json",
                     data: {
                         pageNumber: $("#pageNumber").val(),
                         pageSize: $("#pageSize").val(),
+                        articleTypeId: $("#isNewsGet").is(":checked") ? 1 : 2,
                         userId: null,
                         sortOrder: null,
                         searchString: null
@@ -62,27 +66,66 @@
                     dataType: "json",
                     type: "GET",
                     contentType: "application/json",
-                    
+
                     cache: false
                 })
                   .done(function (response) {
                       $("#res").text(response);
                   });
             });
+            $("#buttonGetTag").click(function () {
+                $("#resTag").text('loading');
+
+                $.ajax({
+                    url: "/api/Tags",
+                    dataType: "json",
+                    type: "GET",
+                    data: { search: $("#txtTagSeach").val() },
+
+                    contentType: "application/json",
+
+                    cache: false
+                })
+                  .done(function (response) {
+                      $("#resTag").text(response);
+                  });
+            });
         });
     </script>
 </head>
 <body>
+    <fieldset>
+        <button id="buttonUser">Save User Test</button>
+    </fieldset>
+    <br /><br /><br />
+    <fieldset>
+        <input type="radio" value="" id="isNews" checked="checked" name="n" /> save as news<br />
+        <input type="radio" value="save as opinion" name="n" /> save as opinion<br />
 
-    <button id="buttonUser">Save User Test</button>
-    <button id="buttonArticle">Save Article Test</button><br />
-    <input id="pageSize" value="5" />
-    <input id="pageNumber" value="1" />
+        <br />
+        <button id="buttonArticle">Save Article Test</button><br />
+    </fieldset>
+    <br /><br /><br />
+    <fieldset>
+        <div id="res"></div>
+        <br />
 
-    <div id="res"></div>
-    <button id="buttonGetArticle">Get Paged Article Test</button><br />
-    <button id="buttonGetArticleAll">Get All Article</button><br />
+        <input id="pageSize" value="20" />
+        <input id="pageNumber" value="1" />
 
+        <input type="radio" id="isNewsGet" checked="checked" name="m" /> news
+        <input type="radio"  name="m" /> opinion 
+<button id="buttonGetArticle">Get Paged Article Test</button><br />
+        <br />
 
+        <button id="buttonGetArticleAll">Get All Article</button><br />
+    </fieldset>
+    <br /><br /><br />
+    <fieldset>
+        Type in this text box to search tags<input id="txtTagSeach" />
+        <div id="resTag"></div>
+
+        <button id="buttonGetTag">Get Tag</button><br />
+    </fieldset>
 </body>
 </html>

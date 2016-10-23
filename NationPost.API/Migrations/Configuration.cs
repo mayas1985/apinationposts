@@ -29,6 +29,25 @@ namespace NationPost.API.Migrations
             //    //new Person { FullName = "Brice Lambson" },
             //    //new Person { FullName = "Rowan Miller" }
             //);
+            context.ArticleTypes.AddOrUpdate(
+                j => j.ArticleTypeId,
+                new ArticleType
+                {
+                    ArticleTypeId = 1,
+                    Name = "News"
+
+                }
+                );
+            context.ArticleTypes.AddOrUpdate(
+                j => j.ArticleTypeId,
+                new ArticleType
+                {
+                    ArticleTypeId = 2,
+                    Name = "Opinion"
+
+                }
+                );
+
             var usr = context.Users.FirstOrDefault(k => k.UserId == new Guid("02fdad93-2a4c-40d0-bc22-944af629f7c4"));
             if (usr != null)
             {
@@ -48,6 +67,33 @@ namespace NationPost.API.Migrations
                     CreatedBy = new User { UserId = new Guid("02fdad93-2a4c-40d0-bc22-944af629f7c4"), CreatedOn = DateTime.Now, FirstName = "Admin", UserName = "Admin", coords = DbGeography.FromText("POINT(-122.336106 47.605049)"), Password = "Admin" },
                     CreatedOn = DateTime.Now,
                     Description = "Seed data"
+
+                }
+                );
+            context.Tags.AddOrUpdate(
+                j => j.TagId,
+                new Tag
+                {
+                    TagDescription = "Global",
+                    TagName = "Global"
+
+                }
+                );
+            context.Tags.AddOrUpdate(
+                j => j.TagId,
+                new Tag
+                {
+                    TagDescription = "Local",
+                    TagName = "Local"
+
+                }
+                );
+            context.Tags.AddOrUpdate(
+                j => j.TagId,
+                new Tag
+                {
+                    TagDescription = "Standard",
+                    TagName = "Standard"
 
                 }
                 );
