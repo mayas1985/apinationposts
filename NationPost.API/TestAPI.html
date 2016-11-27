@@ -23,12 +23,13 @@
                     //CreatedById: "02fdad93-2a4c-40d0-bc22-944af629f7c4",
                     CreatedBy: { "UserId": "02fdad93-2a4c-40d0-bc22-944af629f7c4", "UserName": "dummy", "Password": "dummy" },
                     ArticleTypeId: { "ArticleTypeId": $("#isNews").is(":checked") ? 1 : 2 },
+                    Tags: [{ "TagId": 1 }, { "TagId": 2 }]
                     //ArticleType:"2"
                 },
                 function (data, status) {
                     alert("Data: " + data + "\nStatus: " + status);
                 });
-            });
+            }); 
 
 
 
@@ -90,6 +91,22 @@
                       $("#resTag").text(response);
                   });
             });
+            $("#buttonGetArticleByTag").click(function () {
+                $("#res").text('loading');
+                $.ajax({
+                    url: "/api/articles",
+                    dataType: "json",
+                    type: "GET",
+                    data: { tagId: $("#txtTagId").val() },
+
+                    contentType: "application/json",
+
+                    cache: false
+                })
+                  .done(function (response) {
+                      $("#res").text(response);
+                  });
+            });
         });
     </script>
 </head>
@@ -119,6 +136,11 @@
         <br />
 
         <button id="buttonGetArticleAll">Get All Article</button><br />
+        <br />
+        <input type="text" placeholder="tagId" id="txtTagId" />
+        <button id="buttonGetArticleByTag">Get Article By Tag</button><br />
+
+
     </fieldset>
     <br /><br /><br />
     <fieldset>

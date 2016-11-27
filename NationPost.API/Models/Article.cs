@@ -30,7 +30,7 @@ namespace NationPost.API.Models
         public String Body { get; set; }
         public bool IsActive { get; set; }
         [Required]
-        public ArticleType ArticleTypeId { get; set; }
+        public virtual ArticleType ArticleTypeId { get; set; }
 
         public int Rating { get; set; }
         public int Like { get; set; }
@@ -38,17 +38,22 @@ namespace NationPost.API.Models
 
         public DbGeography coords { get; set; }
 
-        public ICollection<ArticleTags> ArticleTags { get; set; }
+        public virtual ICollection<ArticleTags> ArticleTags { get; set; }
+
+        //Tag as notMapped property, this would be utilized to allow sending tagid as a param for POST
+        [NotMapped]
+        public ICollection<Tag> Tags { get; set; }
+
     }
 
     [NotMapped]
     public class ArticleDTO : Article
     {
-        [Required]
-        public Guid CreatedById { get; set; }
+        public Guid? CreatedById { get; set; }
 
         [Required]
         public int ArticleType { get; set; }
+
         
     }
 }

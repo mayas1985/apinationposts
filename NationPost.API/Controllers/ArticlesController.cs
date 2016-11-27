@@ -11,6 +11,7 @@ using System.Web.Http.Description;
 using NationPost.API.Context;
 using NationPost.API.Models;
 using PagedList;
+using NationPost.API.Helper;
 
 namespace NationPost.API.Controllers
 {
@@ -19,7 +20,7 @@ namespace NationPost.API.Controllers
         private APIContext db = new APIContext();
 
         //[Route("api/articles/paged/{pageNumber=pageNumber}/{pageSize=pageSize}/{userId=userId}/{sortOrder=sortOrder}/{searchString=searchString}")]
-        public IEnumerable<Article> GetArticles(int pageNumber, int pageSize, int articleTypeId, Guid? userId = null, string sortOrder = "", string searchString = "")
+        public IEnumerable<ArticleDTO> GetArticles(int pageNumber, int pageSize, int articleTypeId, Guid? userId = null, string sortOrder = "", string searchString = "")
         {
 
             if (pageNumber <= 0)
@@ -63,27 +64,36 @@ namespace NationPost.API.Controllers
                     break;
             }
 
-            return articles.ToPagedList(pageNumber, pageSize);
+            var lst =  articles.Include(j => j.ArticleTags.Select(m => m.Tag)).ToPagedList(pageNumber, pageSize).ToList();
+            return lst.ToDTO();
         }
 
         // GET api/Articles
         public IEnumerable<Article> GetArticles()
         {
-            //throw new Exception("This would cause all articles to loaded so this api has been stopped");
-            return db.Articles;
+            throw new Exception("This would cause all articles to loaded so this api has been stopped");
+            //return db.Articles;
         }
 
+
+        public IEnumerable<ArticleDTO> GetArticlesByTag(int tagId)
+        {
+            return db.Articles.Where(k => k.ArticleTags.Any(m => m.Tag.TagId == tagId)).Include(j => j.ArticleTags.Select(m => m.Tag)).ToList().ToDTO();
+        }
+
+
+
         // GET api/Articles/5
-        [ResponseType(typeof(Article))]
+        [ResponseType(typeof(ArticleDTO))]
         public IHttpActionResult GetArticle(Guid id)
         {
-            Article article = db.Articles.Find(id);
+            Article article = db.Articles.Where (k=> k.ArticleId ==  id).Include(j => j.ArticleTags.Select(m => m.Tag)).FirstOrDefault();
             if (article == null)
             {
                 return NotFound();
             }
 
-            return Ok(article);
+            return Ok(article.ToDTO());
         }
 
         // PUT api/Articles/5
@@ -123,7 +133,7 @@ namespace NationPost.API.Controllers
         }
 
         // POST api/Articles
-        [ResponseType(typeof(Article))]
+        [ResponseType(typeof(ArticleDTO))]
         public IHttpActionResult PostArticle(Article article)
         {
             if (!ModelState.IsValid)
@@ -155,6 +165,15 @@ namespace NationPost.API.Controllers
             }
 
 
+            //map  tags to articleTags
+            foreach(var tag in article.Tags)
+            {
+                var articleTag = new ArticleTags();
+                articleTag.article = article;
+                articleTag.Tag = db.Tags.FirstOrDefault(k => k.TagId == tag.TagId);
+                db.ArticleTags.Add(articleTag);
+            }
+
             db.Articles.Add(article);
 
             try
@@ -172,10 +191,15 @@ namespace NationPost.API.Controllers
                     throw;
                 }
             }
-            //TODO later: fix self referencing loop
-            article.CreatedBy.Articles = null;
-            article.ArticleTypeId.Articles = null;
-            return CreatedAtRoute("Default", new { id = article.ArticleId }, article);
+            ////TODO later: fix self referencing loop
+            //article.CreatedBy.Articles = null;
+            //article.ArticleTypeId.Articles = null;
+            //foreach (var k in article.ArticleTags)
+            //{
+            //    k.article = null;
+            //}
+
+            return CreatedAtRoute("Default", new { id = article.ArticleId }, article.ToDTO());
         }
 
         // DELETE api/Articles/5
