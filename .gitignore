@@ -3,3 +3,6 @@
 ################################################################################
 
 /packages
+/NationPost.API/obj/Debug
+/NationPost.API/bin
+/.vs/NationPost.API/v14/.suo
