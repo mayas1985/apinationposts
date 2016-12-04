@@ -185,6 +185,7 @@
     <Compile Include="Context\APIContext.cs" />
     <Compile Include="Controllers\ArticlesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\RatingsController.cs" />
     <Compile Include="Controllers\TagsController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
@@ -198,6 +199,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Article.cs" />
+    <Compile Include="Models\ArticleRatings.cs" />
     <Compile Include="Models\ArticleType.cs" />
     <Compile Include="Helper\Coordinate.cs" />
     <Compile Include="Models\ArticleTags.cs" />

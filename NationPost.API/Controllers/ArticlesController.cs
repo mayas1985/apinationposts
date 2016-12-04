@@ -33,7 +33,7 @@ namespace NationPost.API.Controllers
                 throw new Exception("pageSize minimum value is 1");
             }
 
-            sortOrder = String.IsNullOrEmpty(sortOrder) ? "createdon_desc" : "";
+            sortOrder = String.IsNullOrEmpty(sortOrder) ? "createdon_desc" : sortOrder;
 
 
             var articles = from s in db.Articles
@@ -52,11 +52,23 @@ namespace NationPost.API.Controllers
             {
                 articles = articles.Where(k => k.CreatedBy.UserId == userId);
             }
+            var monthback = DateTime.Now.AddMonths(-1);
 
             switch (sortOrder)
             {
                 case "createdon_desc":
                     articles = articles.OrderByDescending(s => s.CreatedOn);
+                    break;
+                case "rating_desc":
+                    articles = articles.Where(k => k.CreatedOn > monthback && k.Rating > 5).OrderByDescending(s => s.Rating);
+                    break;
+
+                case "like_desc":
+                    articles = articles.Where(k => k.CreatedOn > monthback).OrderByDescending(s => s.Like);
+                    break;
+
+                case "dislike_desc":
+                    articles = articles.Where(k => k.CreatedOn > monthback).OrderByDescending(s => s.Dislike);
                     break;
 
                 default:  // Name ascending 
@@ -64,7 +76,7 @@ namespace NationPost.API.Controllers
                     break;
             }
 
-            var lst =  articles.Include(j => j.ArticleTags.Select(m => m.Tag)).ToPagedList(pageNumber, pageSize).ToList();
+            var lst = articles.Include(m => m.ArticleTypeId).Include(j => j.ArticleTags.Select(m => m.Tag)).ToPagedList(pageNumber, pageSize).ToList();
             return lst.ToDTO();
         }
 
@@ -87,13 +99,13 @@ namespace NationPost.API.Controllers
         [ResponseType(typeof(ArticleDTO))]
         public IHttpActionResult GetArticle(Guid id)
         {
-            Article article = db.Articles.Where (k=> k.ArticleId ==  id).Include(j => j.ArticleTags.Select(m => m.Tag)).FirstOrDefault();
+            Article article = db.Articles.Where(k => k.ArticleId == id).Include(j => j.ArticleTags.Select(m => m.Tag)).FirstOrDefault();
             if (article == null)
             {
                 return NotFound();
             }
 
-            return Ok(article.ToDTO());
+            return Ok(article.ToDTO(true));
         }
 
         // PUT api/Articles/5
@@ -132,6 +144,8 @@ namespace NationPost.API.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
+
+
         // POST api/Articles
         [ResponseType(typeof(ArticleDTO))]
         public IHttpActionResult PostArticle(Article article)
@@ -152,12 +166,18 @@ namespace NationPost.API.Controllers
             {
                 throw new Exception("User info not found");
             }
-
-            var articleType = db.ArticleTypes.FirstOrDefault(j => j.ArticleTypeId == article.ArticleTypeId.ArticleTypeId);
-            if (articleType != null)
+            if (article.ArticleTypeId != null)
             {
-                article.ArticleTypeId = articleType;
+                var articleType = db.ArticleTypes.FirstOrDefault(j => j.ArticleTypeId == article.ArticleTypeId.ArticleTypeId);
+                if (articleType != null)
+                {
+                    article.ArticleTypeId = articleType;
 
+                }
+                else
+                {
+                    throw new Exception("Articletype info not found");
+                }
             }
             else
             {
@@ -166,7 +186,7 @@ namespace NationPost.API.Controllers
 
 
             //map  tags to articleTags
-            foreach(var tag in article.Tags)
+            foreach (var tag in article.Tags)
             {
                 var articleTag = new ArticleTags();
                 articleTag.article = article;

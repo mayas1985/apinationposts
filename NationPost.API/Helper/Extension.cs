@@ -8,18 +8,18 @@ namespace NationPost.API.Helper
 {
     public static class Extension
     {
-        public static List<ArticleDTO> ToDTO(this List<Article> articles)
+        public static List<ArticleDTO> ToDTO(this List<Article> articles, bool WithBody = false)
         {
             var articlesDTO = new List<ArticleDTO>();
             foreach (var article in articles)
             {
-                articlesDTO.Add(article.ToDTO());
+                articlesDTO.Add(article.ToDTO(WithBody));
             }
             return articlesDTO;
 
         }
 
-        public static ArticleDTO ToDTO(this Article article)
+        public static ArticleDTO ToDTO(this Article article, bool WithBody = false)
         {
             ArticleDTO articleDTO = new ArticleDTO();
             articleDTO.ArticleId = article.ArticleId;
@@ -30,6 +30,7 @@ namespace NationPost.API.Helper
             articleDTO.Body = article.Body;
             articleDTO.IsActive = article.IsActive;
             articleDTO.Rating = article.Rating;
+            articleDTO.TotalRating = articleDTO.TotalRating;
             articleDTO.Like = article.Like;
             articleDTO.Dislike = article.Dislike;
 
@@ -42,6 +43,7 @@ namespace NationPost.API.Helper
                 articleDTO.Tags.Add(k.Tag);
             }
 
+            articleDTO.Body = WithBody ? articleDTO.Body : string.Empty;
             return articleDTO;
         }
     }

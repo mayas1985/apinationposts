@@ -30,9 +30,22 @@
                 function (data, status) {
                     alert("Data: " + data + "\nStatus: " + status);
                 });
-            }); 
+            });
 
-
+            $("#buttonRating").click(function () {
+                $.post("/api/ratings",
+                {
+                    ArticleId: $("#txtRatingArticleId").val(),
+                    rating: 4, // out of five
+                    ratingType: $("#ddlRating").val(),
+                    IPAdditionalInfo: "IPAdditionalInfo",
+                    UserId : null // if available then send
+                    
+                },
+                function (data, status) {
+                    alert("Data: " + data + "\nStatus: " + status);
+                });
+            });
 
 
             $("#buttonGetArticle").click(function () {
@@ -49,7 +62,7 @@
                         pageSize: $("#pageSize").val(),
                         articleTypeId: $("#isNewsGet").is(":checked") ? 1 : 2,
                         userId: null,
-                        sortOrder: null,
+                        sortOrder: $("#ddlsortOrder").val(),
                         searchString: null
 
                     },
@@ -132,14 +145,28 @@
         <input id="pageNumber" value="1" />
 
         <input type="radio" id="isNewsGet" checked="checked" name="m" /> news
-        <input type="radio"  name="m" /> opinion 
-<button id="buttonGetArticle">Get Paged Article Test</button><br />
+        <input type="radio" name="m" /> opinion
+       <select id="ddlsortOrder">
+    <option value="createdon_desc">Sort by created date descending</option>
+    <option value="rating_desc">Sort by Rating descending for last month</option>
+    <option value="like_desc">Sort by number of like for last month</option>
+           <option value="dislike_desc">Sort by number of Dislike for last month</option>
+</select>
+        <button id="buttonGetArticle">Get Paged Article Test</button><br />
         <br />
 
         <button id="buttonGetArticleAll">Get All Article</button><br />
         <br />
         <input type="text" placeholder="tagId" id="txtTagId" />
         <button id="buttonGetArticleByTag">Get Article By Tag</button><br />
+        <br />
+        <input type="text" placeholder="articleIdGuid" id="txtRatingArticleId" />
+        <select id="ddlRating">
+            <option value="0">Rating</option>
+            <option value="1">Like</option>
+            <option value="2">DisLike</option>
+        </select>
+        <button id="buttonRating">Add Rating</button><br />
 
 
     </fieldset>

@@ -24,6 +24,7 @@ namespace NationPost.API.Context
         public DbSet<ArticleType> ArticleTypes { get; set; }
         public DbSet<ArticleTags> ArticleTags { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<ArticleRatings> ArticleRatings { get; set; }
 
 
 

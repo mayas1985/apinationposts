@@ -30,9 +30,17 @@ namespace NationPost.API.Models
         public String Body { get; set; }
         public bool IsActive { get; set; }
         [Required]
-        public virtual ArticleType ArticleTypeId { get; set; }
+        public ArticleType ArticleTypeId { get; set; }
 
-        public int Rating { get; set; }
+        /// <summary>
+        /// Rating will be submission of different rating given by peoples
+        /// </summary>
+        public int Rating  { get; set; }
+
+        /// <summary>
+        /// Is equalt to rating given by number of people ..eg if 5 people had given rating then TotalRating will be 5
+        /// </summary>
+        public int TotalRating { get; set; }
         public int Like { get; set; }
         public int Dislike { get; set; }
 
