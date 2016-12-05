@@ -90,7 +90,11 @@ namespace NationPost.API.Controllers
 
         public IEnumerable<ArticleDTO> GetArticlesByTag(int tagId)
         {
-            return db.Articles.Where(k => k.ArticleTags.Any(m => m.Tag.TagId == tagId)).Include(j => j.ArticleTags.Select(m => m.Tag)).ToList().ToDTO();
+            return db.Articles.Where(k => k.ArticleTags.Any(m => m.Tag.TagId == tagId))
+                .Include(j => j.ArticleTypeId)
+                .Include(m => m.CreatedBy)
+                .Include(j => j.ArticleTags.Select(m => m.Tag))
+                .ToList().ToDTO();
         }
 
 
@@ -99,7 +103,10 @@ namespace NationPost.API.Controllers
         [ResponseType(typeof(ArticleDTO))]
         public IHttpActionResult GetArticle(Guid id)
         {
-            Article article = db.Articles.Where(k => k.ArticleId == id).Include(j => j.ArticleTags.Select(m => m.Tag)).FirstOrDefault();
+            Article article = db.Articles.Where(k => k.ArticleId == id)
+                .Include(j => j.ArticleTypeId)
+                .Include(m => m.CreatedBy)
+                .Include(j => j.ArticleTags.Select(m => m.Tag)).FirstOrDefault();
             if (article == null)
             {
                 return NotFound();
