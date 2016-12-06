@@ -27,12 +27,17 @@ namespace NationPost.API.Controllers
             }
 
             Article article = db.Articles.Where(k => k.ArticleId == articleRatings.ArticleId).Include(j => j.ArticleTypeId)
-                .Include(m=> m.CreatedBy)
+                .Include(m => m.CreatedBy)
                 .FirstOrDefault();
 
             if (article == null)
             {
                 throw new Exception("article id incorrect");
+            }
+
+            if (db.ArticleRatings.Any(k => k.ArticleId == articleRatings.ArticleId && k.IPAdditionalInfo == articleRatings.IPAdditionalInfo && k.UserId == articleRatings.UserId))
+            {
+                return Ok("Alrady Rated");
             }
 
             db.ArticleRatings.Add(articleRatings);
@@ -65,7 +70,7 @@ namespace NationPost.API.Controllers
             {
                 throw;
             }
-            return Ok();// return CreatedAtRoute("api_Ratings", new { id = article.ArticleId }, article.ToDTO());
+            return Ok("Ratings Updated");// return CreatedAtRoute("api_Ratings", new { id = article.ArticleId }, article.ToDTO());
         }
 
 
