@@ -62,7 +62,12 @@ namespace NationPost.API.Controllers
                 case "rating_desc":
                     articles = articles.Where(k => k.CreatedOn > monthback && k.Rating > 5).OrderByDescending(s => s.Rating);
                     break;
-
+                case "recommended_desc":
+                    articles = articles.OrderByDescending(s => s.Rating);
+                    break;
+                case "trend_desc":
+                    articles = articles.Where(k => k.CreatedOn > monthback && k.Rating > 5).OrderByDescending(s => s.Rating);
+                    break;
                 case "like_desc":
                     articles = articles.Where(k => k.CreatedOn > monthback).OrderByDescending(s => s.Like);
                     break;
