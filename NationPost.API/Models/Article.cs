@@ -35,7 +35,7 @@ namespace NationPost.API.Models
         /// <summary>
         /// Rating will be submission of different rating given by peoples
         /// </summary>
-        public int Rating  { get; set; }
+        public int Rating { get; set; }
 
         /// <summary>
         /// Is equalt to rating given by number of people ..eg if 5 people had given rating then TotalRating will be 5
@@ -44,13 +44,24 @@ namespace NationPost.API.Models
         public int Like { get; set; }
         public int Dislike { get; set; }
 
-        public DbGeography coords { get; set; }
+        //public DbGeography coords { get; set; }
 
         public virtual ICollection<ArticleTags> ArticleTags { get; set; }
 
         //Tag as notMapped property, this would be utilized to allow sending tagid as a param for POST
         [NotMapped]
         public ICollection<Tag> Tags { get; set; }
+
+        public string Longtitude { get; set; }
+        public string Latitude { get; set; }
+        public string Country { get; set; }
+        public string administrative_area_level_1 { get; set; }
+        public string administrative_area_level_2 { get; set; }
+        public string locality { get; set; }
+        public string sublocality_level_1 { get; set; }
+        public string sublocality_level_2 { get; set; }
+        public string sublocality_level_3 { get; set; }
+
 
     }
 
@@ -62,6 +73,6 @@ namespace NationPost.API.Models
         [Required]
         public int ArticleType { get; set; }
 
-        
+
     }
 }

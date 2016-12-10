@@ -20,9 +20,18 @@ namespace NationPost.API.Controllers
         private APIContext db = new APIContext();
 
         //[Route("api/articles/paged/{pageNumber=pageNumber}/{pageSize=pageSize}/{userId=userId}/{sortOrder=sortOrder}/{searchString=searchString}")]
-        public IEnumerable<ArticleDTO> GetArticles(int pageNumber, int pageSize, int articleTypeId, Guid? userId = null, string sortOrder = "", string searchString = "")
-        {
 
+        public IEnumerable<ArticleDTO> GetArticlesWithLocation(int pageNumber, int pageSize, int articleTypeId, Guid? userId = null, string sortOrder = "", string searchString = "",
+         string Longtitude = "",
+        string Latitude = "",
+        string Country = "",
+        string administrative_area_level_1 = "",
+        string administrative_area_level_2 = "",
+        string locality = "",
+        string sublocality_level_1 = "",
+        string sublocality_level_2 = "",
+        string sublocality_level_3 = "")
+        {
             if (pageNumber <= 0)
             {
                 throw new Exception("pagenumber minimum value is 1");
@@ -52,6 +61,19 @@ namespace NationPost.API.Controllers
             {
                 articles = articles.Where(k => k.CreatedBy.UserId == userId);
             }
+
+            if (!string.IsNullOrWhiteSpace(Longtitude)) articles = articles.Where(k => k.Longtitude == Longtitude);
+            if (!string.IsNullOrWhiteSpace(Latitude)) articles = articles.Where(k => k.Latitude == Latitude);
+            if (!string.IsNullOrWhiteSpace(Country)) articles = articles.Where(k => k.Country == Country);
+            if (!string.IsNullOrWhiteSpace(administrative_area_level_1)) articles = articles.Where(k => k.administrative_area_level_1 == administrative_area_level_1);
+            if (!string.IsNullOrWhiteSpace(administrative_area_level_2)) articles = articles.Where(k => k.administrative_area_level_2 == administrative_area_level_2);
+            if (!string.IsNullOrWhiteSpace(locality)) articles = articles.Where(k => k.locality == locality);
+            if (!string.IsNullOrWhiteSpace(sublocality_level_1)) articles = articles.Where(k => k.sublocality_level_1 == sublocality_level_1);
+            if (!string.IsNullOrWhiteSpace(sublocality_level_2)) articles = articles.Where(k => k.sublocality_level_2 == sublocality_level_2);
+            if (!string.IsNullOrWhiteSpace(sublocality_level_3)) articles = articles.Where(k => k.sublocality_level_3 == sublocality_level_3);
+
+
+
             var monthback = DateTime.Now.AddMonths(-1);
 
             switch (sortOrder)
