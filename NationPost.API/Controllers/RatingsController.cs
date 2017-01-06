@@ -66,7 +66,7 @@ namespace NationPost.API.Controllers
             {
                 db.SaveChanges();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
