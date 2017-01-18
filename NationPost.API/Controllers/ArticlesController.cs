@@ -12,6 +12,7 @@ using NationPost.API.Context;
 using NationPost.API.Models;
 using PagedList;
 using NationPost.API.Helper;
+using System.Data.Entity.Validation;
 
 namespace NationPost.API.Controllers
 {
@@ -21,7 +22,7 @@ namespace NationPost.API.Controllers
 
         //[Route("api/articles/paged/{pageNumber=pageNumber}/{pageSize=pageSize}/{userId=userId}/{sortOrder=sortOrder}/{searchString=searchString}")]
 
-        public IEnumerable<ArticleDTO> GetArticlesWithLocation(int pageNumber, int pageSize, int articleTypeId, Guid? userId = null, string sortOrder = "", string searchString = "",
+        public IEnumerable<ArticleDTO> GetArticlesWithLocation(int pageNumber, int pageSize, int? articleTypeId, Guid? userId = null, string sortOrder = "", string searchString = "",
          string Longtitude = "",
         string Latitude = "",
         string Country = "",
@@ -46,8 +47,11 @@ namespace NationPost.API.Controllers
 
 
             var articles = from s in db.Articles
-                           where s.ArticleTypeId.ArticleTypeId == articleTypeId
+                           //where s.ArticleTypeId.ArticleTypeId == articleTypeId
                            select s;
+            if (articleTypeId != null)
+                articles = articles.Where(k => k.ArticleTypeId.ArticleTypeId == articleTypeId);
+
             if (!String.IsNullOrEmpty(searchString))
             {
                 articles = articles.Where(s => s.Title.Contains(searchString)
@@ -190,7 +194,7 @@ namespace NationPost.API.Controllers
             }
             article.ArticleId = Guid.NewGuid();
             article.CreatedOn = DateTime.Now;
-            var user = db.Users.FirstOrDefault(j => j.UserId == article.CreatedBy.UserId);
+            var user = db.Users.FirstOrDefault(j => j.UserId == article.CreatedBy.UserId || j.Email == article.CreatedBy.Email);
             if (user != null)
             {
                 article.CreatedBy = user;
@@ -198,7 +202,22 @@ namespace NationPost.API.Controllers
             }
             else
             {
-                throw new Exception("User info not found");
+                User newuser = new User();
+                newuser.CreatedOn = DateTime.Now;
+                newuser.UserId = Guid.NewGuid();
+                newuser.UserName = article.CreatedBy.Email.Substring(0, 15);
+                newuser.Email = article.CreatedBy.Email;
+                newuser.Password = "Password";
+
+                db.Users.Add(newuser);
+                article.CreatedBy = newuser;
+
+                //db.SaveChanges();
+
+                //throw new Exception("User info not found");
+
+
+
             }
             if (article.ArticleTypeId != null)
             {
@@ -233,6 +252,10 @@ namespace NationPost.API.Controllers
             try
             {
                 db.SaveChanges();
+            }
+            catch (DbEntityValidationException dex)
+            {
+                throw;
             }
             catch (DbUpdateException)
             {

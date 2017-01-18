@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NationPost.API.Models
 {
-    [Table("Users", Schema = "NP")]    
+    [Table("Users", Schema = "NP")]
     public class User
     {
         public Guid UserId { get; set; }
@@ -31,8 +31,14 @@ namespace NationPost.API.Models
         public DateTime CreatedOn { get; set; }
         public ICollection<Article> Articles { get; set; }
 
-        public DbGeography coords { get; set; }
+        public string AboutMe { get; set; }
 
+        public string FacebookLink { get; set; }
+
+        public string TwitterLink { get; set; }
+
+
+        //public DbGeography coords { get; set; }
         public String Token { get; set; }
     }
 }

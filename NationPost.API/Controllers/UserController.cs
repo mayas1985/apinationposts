@@ -35,9 +35,9 @@ namespace NationPost.API.Controllers
             return user;
         }
 
-        public User GetUser(string email)
+        public User GetUser(string email, string password)
         {
-            User user = db.Users.FirstOrDefault(k => k.Email == email);
+            User user = db.Users.FirstOrDefault(k => k.Email == email && k.Password == password);
             return user;
         }
 
@@ -69,7 +69,7 @@ namespace NationPost.API.Controllers
         }
 
         // POST api/User
-        public HttpResponseMessage PostUser(User user)
+        public User PostUser(User user)
         {
             if (ModelState.IsValid)
             {
@@ -89,9 +89,9 @@ namespace NationPost.API.Controllers
                         db.Users.Add(user);
                         db.SaveChanges();
 
-                        HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, user);
-                        response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = user.UserId }));
-                        return response;
+                        //HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, user);
+                        //response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = user.UserId }));
+                        return user;
                     }
                     else
                     {
@@ -114,18 +114,18 @@ namespace NationPost.API.Controllers
                     }
                     catch (DbUpdateConcurrencyException ex)
                     {
-                        return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
+                        throw ex;//return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
                     }
-                    HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, user);
-                    response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = user.UserId }));
-                    return response;
+                    //HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, user);
+                    //response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = user.UserId }));
+                    return user;
                 }
 
 
             }
             else
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                throw new Exception("view invalid");
             }
         }
 
