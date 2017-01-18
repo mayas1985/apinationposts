@@ -35,6 +35,12 @@ namespace NationPost.API.Controllers
             return user;
         }
 
+        public User GetUser(string email)
+        {
+            User user = db.Users.FirstOrDefault(k => k.Email == email);
+            return user;
+        }
+
         // PUT api/User/5
         public HttpResponseMessage PutUser(Guid id, User user)
         {
@@ -67,14 +73,55 @@ namespace NationPost.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                user.CreatedOn = DateTime.Now;
-                user.UserId = Guid.NewGuid();
-                db.Users.Add(user);
-                db.SaveChanges();
 
-                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, user);
-                response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = user.UserId }));
-                return response;
+                if (string.IsNullOrWhiteSpace(user.Email))
+                {
+                    throw new Exception("Email cannot be blank");
+                }
+                if (Guid.Empty == user.UserId)
+                {
+
+                    if (!db.Users.Any(k => k.Email == user.Email))
+                    {
+
+                        user.CreatedOn = DateTime.Now;
+                        user.UserId = Guid.NewGuid();
+                        db.Users.Add(user);
+                        db.SaveChanges();
+
+                        HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, user);
+                        response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = user.UserId }));
+                        return response;
+                    }
+                    else
+                    {
+                        throw new Exception("Email already exists");
+                    }
+                }
+                else
+                {
+                    if (db.Users.Any(k => k.Email == user.Email && k.UserId != user.UserId))
+                    {
+                        throw new Exception("Email already associated to other user");
+
+                    }
+                    db.Entry(user).State = EntityState.Modified;
+
+
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (DbUpdateConcurrencyException ex)
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
+                    }
+                    HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, user);
+                    response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = user.UserId }));
+                    return response;
+                }
+
+
             }
             else
             {

@@ -9,7 +9,8 @@
                 $.post("/api/user",
                 {
                     UserName: "APITestUser",
-                    Password: "APITest"
+                    Password: "APITest",
+                    Email: $('#email').val()
                 },
                 function (data, status) {
                     alert("Data: " + data + "\nStatus: " + status);
@@ -126,6 +127,7 @@
 </head>
 <body>
     <fieldset>
+        <input type="email" id="email" value="mayas1985@gmail.com" />
         <button id="buttonUser">Save User Test</button>
     </fieldset>
     <br /><br /><br />
