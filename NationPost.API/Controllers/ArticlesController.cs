@@ -205,7 +205,7 @@ namespace NationPost.API.Controllers
                 User newuser = new User();
                 newuser.CreatedOn = DateTime.Now;
                 newuser.UserId = Guid.NewGuid();
-                newuser.UserName = article.CreatedBy.Email.Substring(0, 15);
+                newuser.UserName = "Auto";
                 newuser.Email = article.CreatedBy.Email;
                 newuser.Password = "Password";
 

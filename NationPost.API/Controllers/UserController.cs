@@ -18,10 +18,10 @@ namespace NationPost.API.Controllers
         private APIContext db = new APIContext();
 
         // GET api/User
-        public IEnumerable<User> GetUsers()
-        {
-            return db.Users.AsEnumerable();
-        }
+        //public IEnumerable<User> GetUsers()
+        //{
+        //    return db.Users.AsEnumerable();
+        //}
 
         // GET api/User/5
         public User GetUser(Guid id)

@@ -34,6 +34,17 @@ namespace NationPost.API.Helper
             articleDTO.Like = article.Like;
             articleDTO.Dislike = article.Dislike;
 
+            articleDTO.Longtitude = article.Longtitude;
+            articleDTO.Latitude = article.Latitude;
+            articleDTO.Country = article.Country;
+            articleDTO.administrative_area_level_1 = article.administrative_area_level_1;
+            articleDTO.administrative_area_level_2 = article.administrative_area_level_2;
+            articleDTO.locality = article.locality;
+            articleDTO.sublocality_level_1 = article.sublocality_level_1;
+            articleDTO.sublocality_level_2 = article.sublocality_level_2;
+            articleDTO.sublocality_level_3 = article.sublocality_level_3;
+
+
             articleDTO.CreatedById = article.CreatedBy?.UserId;
             articleDTO.ArticleType = article.ArticleTypeId.ArticleTypeId;
 

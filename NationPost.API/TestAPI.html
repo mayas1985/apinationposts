@@ -5,6 +5,18 @@
     <script src="Scripts/jquery-1.8.2.min.js"></script>
     <script>
         $(document).ready(function () {
+            $("#buttonContactEmail").click(function () {
+                $.post("/api/contact",
+                {
+                    message: "TestAPI>html",
+                    fromEmail: "abac@asdf.com",
+                },
+                function (data, status) {
+                    alert("Data: " + data + "\nStatus: " + status);
+                });
+            });
+
+
             $("#buttonGetUser").click(function () {
                 $("#res").text('loading');
 
@@ -46,7 +58,16 @@
                     //CreatedById: "02fdad93-2a4c-40d0-bc22-944af629f7c4",
                     CreatedBy: { "UserId": "00000000-0000-0000-0000-000000000000", "UserName": "dummy", "Password": "dummy", "Email": "mayas1986@gmail.com" },
                     ArticleTypeId: { "ArticleTypeId": $("#isNews").is(":checked") ? 1 : 2 },
-                    Tags: [{ "TagId": 1 }, { "TagId": 2 }]
+                    Tags: [{ "TagId": 1 }, { "TagId": 2 }],
+                    Longtitude: "asdfasdf",
+                    Latitude: "asdfasdf",
+                    Country: "India",
+                    administrative_area_level_1: "Pune",
+                    administrative_area_level_2: "Pune",
+                    locality: "Pune",
+                    sublocality_level_1: "Pune",
+                    sublocality_level_2: "Pune",
+                    sublocality_level_3: "Pune"
                     //ArticleType:"2"
                 },
                 function (data, status) {
@@ -147,6 +168,9 @@
     </script>
 </head>
 <body>
+    <fieldset>
+        <button id="buttonContactEmail">Send email</button> 
+    </fieldset>
     <fieldset>
         <input type="email" id="email" value="mayas1985@gmail.com" /><input type="text" id="password" value="password" />
         <br />
