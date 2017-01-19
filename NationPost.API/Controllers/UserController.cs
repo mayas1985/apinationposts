@@ -37,7 +37,8 @@ namespace NationPost.API.Controllers
 
         public User GetUser(string email, string password)
         {
-            User user = db.Users.FirstOrDefault(k => k.Email == email && k.Password == password);
+            User user = db.Users.FirstOrDefault(k => k.Email == email && k.Password == password
+            );
             return user;
         }
 
