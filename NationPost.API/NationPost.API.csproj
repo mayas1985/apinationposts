@@ -185,6 +185,7 @@
     <Compile Include="Context\APIContext.cs" />
     <Compile Include="Controllers\ArticlesController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
+    <Compile Include="Controllers\ExtendedController.cs" />
     <Compile Include="Controllers\GoogleController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RatingsController.cs" />
@@ -336,6 +337,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Extended\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201605310643503_initial.resx">

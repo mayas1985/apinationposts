@@ -28,7 +28,9 @@ namespace NationPost.API.Helper
             articleDTO.Description = article.Description;
             articleDTO.Summary = article.Summary;
             articleDTO.Body = article.Body;
-            articleDTO.IsActive = article.IsActive;
+            articleDTO.IsValid = article.IsValid;
+            articleDTO.IsVisible = article.IsVisible;
+
             articleDTO.Rating = article.Rating;
             articleDTO.TotalRating = articleDTO.TotalRating;
             articleDTO.Like = article.Like;

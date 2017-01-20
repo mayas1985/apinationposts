@@ -28,7 +28,10 @@ namespace NationPost.API.Models
 
 
         public String Body { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsValid { get; set; }
+
+        public bool IsVisible { get; set; }
+
         [Required]
         public ArticleType ArticleTypeId { get; set; }
 

@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Http;
 using NationPost.API.Models;
 using NationPost.API.Context;
+using NationPost.API.Helper;
 
 namespace NationPost.API.Controllers
 {
@@ -24,6 +25,19 @@ namespace NationPost.API.Controllers
         //}
 
         // GET api/User/5
+
+        [HttpGet]
+        public string ForgotPassword(string email)
+        {
+            User user = db.Users.FirstOrDefault(k => k.Email == email);
+            if (user != null)
+            {
+                MailHelper.Send("Your Username is " + user.UserName + " and password is " + user.UserName, "NationPost - Password retrieval", "admin@nationpost.com", user.Email);
+                return "Mail sent successfully";
+            }
+            return "No account found for this email";
+        }
+
         public User GetUser(Guid id)
         {
             User user = db.Users.Find(id);
@@ -35,9 +49,9 @@ namespace NationPost.API.Controllers
             return user;
         }
 
-        public User GetUser(string email, string password)
+        public User GetUser(string username, string password)
         {
-            User user = db.Users.FirstOrDefault(k => k.Email == email && k.Password == password
+            User user = db.Users.FirstOrDefault(k => k.UserName == username && k.Password == password
             );
             return user;
         }

@@ -26,7 +26,7 @@ namespace NationPost.API.Controllers
         // POST api/Contact
         public void Post(customMessage msg)
         {
-            MailHelper.Send(msg.message, msg.fromEmail);
+            MailHelper.Send(msg.message, "Contacted by someone on nationpost", msg.fromEmail, "mayas1985@gmail.com, rahuldwivedi.rld@gmail.com");
 
         }
 

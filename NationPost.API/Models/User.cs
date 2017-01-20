@@ -14,7 +14,9 @@ namespace NationPost.API.Models
     public class User
     {
         public Guid UserId { get; set; }
-        [MaxLength(15, ErrorMessage = "Only 15 characters are allowed"), MinLength(5), Required]
+
+        [Index(IsUnique =true)]
+        [MaxLength(350), MinLength(2), Required]
         public String UserName { get; set; }
 
         [MaxLength(15, ErrorMessage = "Only 15 characters are allowed")]
@@ -23,6 +25,8 @@ namespace NationPost.API.Models
         [MaxLength(15, ErrorMessage = "Only 15 characters are allowed")]
         public String LastName { get; set; }
 
+        [Index(IsUnique = true)]
+        [MaxLength(350), MinLength(2)]
         public String Email { get; set; }
 
         [MaxLength(15, ErrorMessage = "Only 15 characters are allowed"), MinLength(5), Required]
@@ -33,10 +37,19 @@ namespace NationPost.API.Models
 
         public string AboutMe { get; set; }
 
+        public bool IsAboutMeVisible { get; set; }
+
+
+
         public string FacebookLink { get; set; }
+        public bool IsFacebookLinkVisible { get; set; }
 
         public string TwitterLink { get; set; }
+        public bool IsTwitterLinkVisible { get; set; }
 
+
+        public string Contact { get; set; }
+        public string IsContactVisible { get; set; }
 
         //public DbGeography coords { get; set; }
         public String Token { get; set; }

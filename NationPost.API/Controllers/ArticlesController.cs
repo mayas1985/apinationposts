@@ -47,7 +47,7 @@ namespace NationPost.API.Controllers
 
 
             var articles = from s in db.Articles
-                           //where s.ArticleTypeId.ArticleTypeId == articleTypeId
+                               //where s.ArticleTypeId.ArticleTypeId == articleTypeId
                            select s;
             if (articleTypeId != null)
                 articles = articles.Where(k => k.ArticleTypeId.ArticleTypeId == articleTypeId);
@@ -194,6 +194,9 @@ namespace NationPost.API.Controllers
             }
             article.ArticleId = Guid.NewGuid();
             article.CreatedOn = DateTime.Now;
+            var mailNeedsToBeSent = false;
+            User newuser = null;
+
             var user = db.Users.FirstOrDefault(j => j.UserId == article.CreatedBy.UserId || j.Email == article.CreatedBy.Email);
             if (user != null)
             {
@@ -202,16 +205,16 @@ namespace NationPost.API.Controllers
             }
             else
             {
-                User newuser = new User();
+                newuser = new User();
                 newuser.CreatedOn = DateTime.Now;
                 newuser.UserId = Guid.NewGuid();
-                newuser.UserName = "Auto";
+                newuser.UserName = article.CreatedBy.Email;
                 newuser.Email = article.CreatedBy.Email;
-                newuser.Password = "Password";
+                newuser.Password = "Password" + new Random().Next(10000, 99999).ToString();
 
                 db.Users.Add(newuser);
                 article.CreatedBy = newuser;
-
+                mailNeedsToBeSent = true;
                 //db.SaveChanges();
 
                 //throw new Exception("User info not found");
@@ -252,6 +255,10 @@ namespace NationPost.API.Controllers
             try
             {
                 db.SaveChanges();
+                if (mailNeedsToBeSent)
+                {
+                    MailHelper.Send("Your Username is " + newuser.UserName + " and password is " + newuser.UserName, "NationPost - Password retrieval", "admin@nationpost.com", newuser.Email);
+                }
             }
             catch (DbEntityValidationException dex)
             {
