@@ -19,11 +19,11 @@ namespace NationPost.API.Controllers
         private APIContext db = new APIContext();
 
         // POST api/Ratings
-        public IHttpActionResult PostArticleRatings(ArticleRatings articleRatings)
+        public ResponseDTO PostArticleRatings(ArticleRatings articleRatings)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return new ResponseDTO() { IsSuccess = false, Message = "Model not valid, check parameters" };
             }
 
             Article article = db.Articles.Where(k => k.ArticleId == articleRatings.ArticleId).Include(j => j.ArticleTypeId)
@@ -32,12 +32,12 @@ namespace NationPost.API.Controllers
 
             if (article == null)
             {
-                throw new Exception("article id incorrect");
+                return new ResponseDTO() { IsSuccess = false, Message = "article id incorrect" };
             }
 
-            if (db.ArticleRatings.Any(k => k.ArticleId == articleRatings.ArticleId && k.IPAdditionalInfo == articleRatings.IPAdditionalInfo && k.UserId == articleRatings.UserId))
+            if (articleRatings.ratingType == RatingType.RatingGiven && db.ArticleRatings.Any(k => k.ArticleId == articleRatings.ArticleId && k.IPAdditionalInfo == articleRatings.IPAdditionalInfo && k.UserId == articleRatings.UserId))
             {
-                return Ok("Alrady Rated");
+                return new ResponseDTO() { IsSuccess = true, Message = "Already Rated" };
             }
 
             db.ArticleRatings.Add(articleRatings);
@@ -45,10 +45,24 @@ namespace NationPost.API.Controllers
             if (articleRatings.ratingType == RatingType.RatingGiven)
             {
                 if (articleRatings.Rating > 5)
-                    throw new Exception("Rating cannot be greater than 5");
+                    return new ResponseDTO() { IsSuccess = false, Message = "Rating cannot be greater than 5" };
+
                 article.Rating = article.Rating + articleRatings.Rating;
                 article.TotalRating = article.TotalRating + 1;
             }
+
+            if (articleRatings.ratingType == RatingType.Liked || articleRatings.ratingType == RatingType.Disliked)
+
+            {
+                var articleRating = db.ArticleRatings.FirstOrDefault(k => (k.ratingType == RatingType.Liked || k.ratingType == RatingType.Disliked)
+                && k.ArticleId == articleRatings.ArticleId && k.IPAdditionalInfo == articleRatings.IPAdditionalInfo && k.UserId == articleRatings.UserId);
+                if (articleRating != null)
+                {
+
+                    return new ResponseDTO() { IsSuccess = true, Message = "Already " + (articleRating.ratingType == RatingType.Liked ? "Liked" : "Disliked") };
+                }
+            }
+
 
             if (articleRatings.ratingType == RatingType.Liked)
             {
@@ -70,7 +84,8 @@ namespace NationPost.API.Controllers
             {
                 throw;
             }
-            return Ok("Ratings Updated");// return CreatedAtRoute("api_Ratings", new { id = article.ArticleId }, article.ToDTO());
+            return new ResponseDTO() { IsSuccess = true, Message = "Ratings Updated " };
+
         }
 
 

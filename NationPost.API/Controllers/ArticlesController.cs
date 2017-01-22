@@ -208,7 +208,7 @@ namespace NationPost.API.Controllers
                 newuser = new User();
                 newuser.CreatedOn = DateTime.Now;
                 newuser.UserId = Guid.NewGuid();
-                newuser.UserName = article.CreatedBy.Email;
+                //newuser.UserName = article.CreatedBy.Email;
                 newuser.Email = article.CreatedBy.Email;
                 newuser.Password = "Password" + new Random().Next(10000, 99999).ToString();
 
@@ -257,7 +257,7 @@ namespace NationPost.API.Controllers
                 db.SaveChanges();
                 if (mailNeedsToBeSent)
                 {
-                    MailHelper.Send("Your Username is " + newuser.UserName + " and password is " + newuser.UserName, "NationPost - Password retrieval", "admin@nationpost.com", newuser.Email);
+                    MailHelper.Send("Your Username is " + newuser.Email + " and password is " + newuser.Password, "NationPost - Password retrieval", "admin@nationpost.com", newuser.Email);
                 }
             }
             catch (DbEntityValidationException dex)

@@ -1,6 +1,12 @@
-﻿using System;
+﻿using NationPost.API.Context;
+using NationPost.API.Helper;
+using NationPost.API.Models;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -8,12 +14,167 @@ namespace NationPost.API.Controllers
 {
     public class ExtendedController : Controller
     {
-        [Route("~/api/user/ForgotPassword")]
-        public string ForgotPassword()
+        private APIContext db = new APIContext();
+
+        [HttpGet]
+        public ActionResult Login(string Email, string Password)
         {
-            return "Succ";
+            User user = db.Users.FirstOrDefault(k => k.Email == Email && k.Password == Password);
+            if (user != null)
+            {
+                this.Session.SetDataToSession<Guid>(SessionExtensions.Keys.LoggedInUserId, user.UserId);
+            }
+
+            return Json(user, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public ActionResult LoggedInUserId()
+        {
+            return Json(new { LoggedInUserId = this.Session.GetDataFromSession<Guid>(SessionExtensions.Keys.LoggedInUserId) }, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+
+        [HttpGet]
+        public ActionResult LoginFromGoogle(string id_token)
+        {
+            //validate 
+            //https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=
+            //if user is found 
+            using (var webClient = new WebClient())
+            {
+                var json_data = string.Empty;
+                try
+                {
+                    json_data = webClient.DownloadString("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" + id_token);
+                    var result = JsonConvert.DeserializeObject<TokenResult>(json_data);
+
+                    User user = db.Users.FirstOrDefault(k => k.Email == result.email);
+
+                    if (user == null)
+                    {
+                        user = new Models.User();
+                        user.CreatedOn = DateTime.Now;
+                        user.UserId = Guid.NewGuid();
+
+                        user.Email = result.email;
+                        user.Password = "Password";
+                        db.Users.Add(user);
+                        db.SaveChanges();
+                    }
+                    this.Session.SetDataToSession<Guid>(SessionExtensions.Keys.LoggedInUserId, user.UserId);
+
+                    return Json(user, JsonRequestBehavior.AllowGet);
+
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+
+            return null;
+        }
+
+        [HttpPost]
+        public ActionResult UpdateUserInfo(UpdateUserDto userDto)
+        {
+            var userId = this.Session.GetDataFromSession<Guid>(SessionExtensions.Keys.LoggedInUserId);
+            if (userId == Guid.Empty)
+            {
+                return Json(new ResponseDTO() { IsSuccess = false, Message = "User not logged In" }, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                var user = db.Users.Find(userId);
+                if (user != null)
+                {
+                    user.AboutMe = userDto.AboutMe;
+                    user.IsAboutMeVisible = userDto.IsAboutMeVisible;
+                    user.FacebookLink = userDto.FacebookLink;
+                    user.IsFacebookLinkVisible = userDto.IsFacebookLinkVisible;
+                    user.TwitterLink = userDto.TwitterLink;
+                    user.IsTwitterLinkVisible = userDto.IsTwitterLinkVisible;
+                    user.Contact = userDto.Contact;
+                    user.IsContactVisible = userDto.IsContactVisible;
+                    user.GoogleLink = userDto.GoogleLink;
+                    user.IsGoogleLinkVisible = userDto.IsGoogleLinkVisible;
+
+                    db.Entry(user).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return Json(new ResponseDTO() { IsSuccess = true, Message = "User information updated successfully" }, JsonRequestBehavior.AllowGet);
+
+                }
+                return Json(new ResponseDTO() { IsSuccess = false, Message = "User not logged In" }, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+
+        [HttpPost]
+        public ActionResult UpdateArticle(UpdateArticleDto updateArticleDto)
+        {
+            var userId = this.Session.GetDataFromSession<Guid>(SessionExtensions.Keys.LoggedInUserId);
+            if (userId == Guid.Empty)
+            {
+                return Json(new ResponseDTO() { IsSuccess = false, Message = "User not logged In" }, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                var article = db.Articles.Where(j => j.CreatedBy.UserId == userId && j.ArticleId == updateArticleDto.AritcleId).FirstOrDefault();
+                if (article != null)
+                {
+                    article.Title = updateArticleDto.Title;
+                    article.Description = updateArticleDto.Description;
+                    article.Summary = updateArticleDto.Summary;
+                    article.Body = updateArticleDto.Body;
+                    article.IsValid = updateArticleDto.IsValid;
+                    article.IsVisible = updateArticleDto.IsVisible;
+                    db.Entry(article).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return Json(new ResponseDTO() { IsSuccess = true, Message = "User information updated successfully" }, JsonRequestBehavior.AllowGet);
+
+                }
+                else
+                {
+                    return Json(new ResponseDTO() { IsSuccess = false, Message = "Cannot edit this article!!" }, JsonRequestBehavior.AllowGet);
+
+                }
+
+            }
+        }
+
+
+        [HttpGet]
+        //[Route("API/User/ForgotPassword/{emailToCheck}")]
+        public ActionResult ForgotPassword(string emailToCheck)
+        {
+
+            User user = db.Users.FirstOrDefault(k => k.Email == emailToCheck);
+            if (user != null)
+            {
+                MailHelper.Send("Your Username is " + user.Email + " and password is " + user.Password, "NationPost - Password retrieval", "admin@nationpost.com", user.Email);
+                return Json(new ResponseDTO() { IsSuccess = true, Message = "Mail sent successfully" });
+            }
+
+            return Json(new ResponseDTO() { IsSuccess = false, Message = "No account found for this email" }, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+
+        [HttpGet]
+        // [Route("API/User/IsEmailExists/{emailToCheckDuplicate}")]
+
+        public ActionResult IsEmailExists(string emailToCheckDuplicate)
+        {
+            var foundDuplicate = db.Users.Any(k => k.Email == emailToCheckDuplicate);
+            return Json(new ResponseDTO() { IsSuccess = foundDuplicate, Message = "Email already registered" }, JsonRequestBehavior.AllowGet);
+
+        }
 
 
         // GET: Extended

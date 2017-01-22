@@ -189,6 +189,9 @@
     <Compile Include="Controllers\GoogleController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RatingsController.cs" />
+    <Compile Include="Models\UpdateUserDto.cs" />
+    <Compile Include="Helper\SessionExtensions.cs" />
+    <Compile Include="Models\ResponseDTO.cs" />
     <Compile Include="Controllers\TagsController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
@@ -210,6 +213,7 @@
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RouteHandler\MyHttpControllerRouteHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />

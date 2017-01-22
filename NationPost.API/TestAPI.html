@@ -21,13 +21,13 @@
                 $("#res").text('loading');
 
                 $.ajax({
-                    url: "/api/user",
+                    url: "/extended/Login",
                     dataType: "json",
                     type: "GET",
                     contentType: "application/json",
                     data: {
-                        Email: $('#email').val(),
-                        Password: $('#password').val()
+                        email: $('#extEmail').val(),
+                        Password: $('#extPassword').val()
                     },
                     cache: false
                 })
@@ -39,7 +39,6 @@
             $("#buttonUser").click(function () {
                 $.post("/api/user",
                 {
-                    UserName: "APITestUser",
                     Password: $('#password').val(),
                     Email: $('#email').val()
                 },
@@ -83,6 +82,42 @@
                     ratingType: $("#ddlRating").val(),
                     IPAdditionalInfo: "IPAdditionalInfo",
                     UserId: null // if available then send
+
+                },
+                function (data, status) {
+                    alert("Data: " + data + "\nStatus: " + status);
+                });
+            });
+
+            $("#buttonUpdateUserInfo").click(function () {
+                $.post("/extended/UpdateUserInfo",
+                {
+                    AboutMe: "ABout me",
+                    IsAboutMeVisible: true,
+                    FacebookLink: "IPAdditionalInfo",
+                    IsFacebookLinkVisible: true, // if available then send
+                    TwitterLink: "asdfasdfasdf",
+                    IsTwitterLinkVisible: false,
+                    Contact: "asdfasdf",
+                    IsContactVisible: true,
+                    GoogleLink: "asdfasdf",
+                    IsGoogleLinkVisible: true
+
+                },
+                function (data, status) {
+                    alert("Data: " + data + "\nStatus: " + status);
+                });
+            });
+            $("#buttonUpdateUserInfo").click(function () {
+                $.post("/extended/UpdateArticle",
+                {
+                    AritcleId: $("#extArticleId").val(),
+                    Title: "Title Updated",
+                    Description: "Description Updated",
+                    Summary: "SUmmary Updated" , // if available then send
+                    Body: "Body Updated",
+                    IsValid: true,
+                    IsVisible: true,
 
                 },
                 function (data, status) {
@@ -168,13 +203,32 @@
     </script>
 </head>
 <body>
+    http://localhost:58722/extended/ForgotPassword?emailToCheck=ass@b.om
+    <br />
+    http://localhost:58722/extended/IsEmailExists?emailToCheckDuplicate=ass@b.om
+    <br />
+
+    <fieldset title="Session Based Extended Calls ">
+        <input type="text" id="extEmail" value="mayas1985@gmail.com" /><input type="text" id="extPassword" value="password" />
+
+        <button id="buttonGetUser">Login And Generate Session</button>
+        
+        <button id="buttonUpdateUserInfo">Update User Info </button>
+
+
+        <input type="text" id="extArticleId" placeholder="ArticleGUid" />
+        <button id="buttonUpdateArticle">Update Article</button>
+
+
+    </fieldset>
+
     <fieldset>
-        <button id="buttonContactEmail">Send email</button> 
+        <button id="buttonContactEmail">Send email</button>
     </fieldset>
     <fieldset>
-        <input type="email" id="email" value="mayas1985@gmail.com" /><input type="text" id="password" value="password" />
+        <input type="text" id="email" value="mayas1985@gmail.com" /><input type="text" id="password" value="password" />
         <br />
-        <button id="buttonUser">Save User Test</button> <button id="buttonGetUser">Get User by Email and Password</button>
+        <button id="buttonUser">Save User Test</button>
     </fieldset>
     <br /><br /><br />
     <fieldset>

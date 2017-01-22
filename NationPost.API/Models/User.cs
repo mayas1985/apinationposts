@@ -15,10 +15,6 @@ namespace NationPost.API.Models
     {
         public Guid UserId { get; set; }
 
-        [Index(IsUnique =true)]
-        [MaxLength(350), MinLength(2), Required]
-        public String UserName { get; set; }
-
         [MaxLength(15, ErrorMessage = "Only 15 characters are allowed")]
         public String FirstName { get; set; }
 
@@ -53,5 +49,7 @@ namespace NationPost.API.Models
 
         //public DbGeography coords { get; set; }
         public String Token { get; set; }
+        public string GoogleLink { get; internal set; }
+        public string IsGoogleLinkVisible { get; internal set; }
     }
 }

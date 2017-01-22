@@ -1,4 +1,5 @@
 ﻿using NationPost.API.Context;
+using NationPost.API.Helper;
 using NationPost.API.Models;
 using Newtonsoft.Json;
 using System;
@@ -33,40 +34,7 @@ namespace NationPost.API.Controllers
         // GET: api/Google/5
         public User Get(string id_token)
         {
-            //validate 
-            //https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=
-            //if user is found 
-            using (var webClient = new WebClient())
-            {
-                var json_data = string.Empty;
-                try
-                {
-                    json_data = webClient.DownloadString("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" + id_token);
-                    var result = JsonConvert.DeserializeObject<TokenResult>(json_data);
-
-                    User user = db.Users.FirstOrDefault(k => k.Email == result.email);
-
-                    if (user == null)
-                    {
-                        user = new Models.User();
-                        user.CreatedOn = DateTime.Now;
-                        user.UserId = Guid.NewGuid();
-                        user.UserName = "Auto";
-                        user.Email = result.email;
-                        user.Password = "Password";
-                        db.Users.Add(user);
-                        db.SaveChanges();
-                    }
-
-                    return user;
-                }
-                catch (Exception ex)
-                {
-                    throw;
-                }
-            }
-
-            return null;
+            throw new Exception("Moved to extended controller");
         }
 
         //// POST: api/Google
