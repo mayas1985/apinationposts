@@ -36,6 +36,16 @@
                   });
             });
 
+            $("#buttonAddRemoveTag").click(function () {
+                $.post("/extended/ToggleTag",
+                {
+                    articleId: $('#extArticleId').val(),
+                    tagId: 1
+                },
+                function (data, status) {
+                    alert("Data: " + data + "\nStatus: " + status);
+                });
+            });
             $("#buttonUser").click(function () {
                 $.post("/api/user",
                 {
@@ -108,13 +118,13 @@
                     alert("Data: " + data + "\nStatus: " + status);
                 });
             });
-            $("#buttonUpdateUserInfo").click(function () {
+            $("#buttonUpdateArticle").click(function () {
                 $.post("/extended/UpdateArticle",
                 {
                     AritcleId: $("#extArticleId").val(),
                     Title: "Title Updated",
                     Description: "Description Updated",
-                    Summary: "SUmmary Updated" , // if available then send
+                    Summary: "SUmmary Updated", // if available then send
                     Body: "Body Updated",
                     IsValid: true,
                     IsVisible: true,
@@ -209,15 +219,15 @@
     <br />
 
     <fieldset title="Session Based Extended Calls ">
-        <input type="text" id="extEmail" value="mayas1985@gmail.com" /><input type="text" id="extPassword" value="password" />
+        <input type="text" id="extEmail" value="rahul@testNation.com" /><input type="text" id="extPassword" value="12345" />
 
         <button id="buttonGetUser">Login And Generate Session</button>
-        
+
         <button id="buttonUpdateUserInfo">Update User Info </button>
 
-
-        <input type="text" id="extArticleId" placeholder="ArticleGUid" />
+        <input type="text" id="extArticleId" placeholder="ArticleGUid" value="E0088FFA-9DA6-4E96-90CB-3D27F705144C" />
         <button id="buttonUpdateArticle">Update Article</button>
+        <button id="buttonAddRemoveTag">Toggle TagID1</button>
 
 
     </fieldset>

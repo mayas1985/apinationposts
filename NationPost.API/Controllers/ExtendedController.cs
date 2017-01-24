@@ -35,6 +35,14 @@ namespace NationPost.API.Controllers
 
         }
 
+        [HttpGet]
+        public ActionResult LogOut()
+        {
+            this.Session.RemoveAll();
+            this.Session.Clear();
+            return new HttpStatusCodeResult(200, "Signed Out successfully");
+
+        }
 
 
         [HttpGet]
@@ -114,6 +122,48 @@ namespace NationPost.API.Controllers
         }
 
         [HttpPost]
+        public ActionResult ToggleTag(Guid articleId, int tagId)
+        {
+            var userId = this.Session.GetDataFromSession<Guid>(SessionExtensions.Keys.LoggedInUserId);
+            if (userId == Guid.Empty)
+            {
+                return Json(new ResponseDTO() { IsSuccess = false, Message = "User not logged In" }, JsonRequestBehavior.AllowGet);
+
+            }
+            var article = db.Articles.Include(p => p.ArticleTypeId).Include(m => m.CreatedBy).FirstOrDefault(j => j.CreatedBy.UserId == userId && j.ArticleId == articleId);
+            if (article != null)
+            {
+                if( db.ArticleTags.Include(p => p.article).Include(s => s.Tag).Any(k=> k.article.ArticleId == articleId && k.Tag.TagId== tagId))
+                {
+                    var tag = db.ArticleTags.Include(p => p.article).Include(s => s.Tag).FirstOrDefault(k => k.article.ArticleId == articleId && k.Tag.TagId == tagId);
+                    db.ArticleTags.Remove(tag);
+                    db.SaveChanges();
+                    return Json(new ResponseDTO() { IsSuccess = true, Message = "Tag removed successfully" }, JsonRequestBehavior.AllowGet);
+
+                }
+                else
+                {
+                    var articleTag = new ArticleTags();
+                    articleTag.article = article;
+                    articleTag.Tag = db.Tags.FirstOrDefault(k => k.TagId == tagId);
+                    db.ArticleTags.Add(articleTag);
+                    db.SaveChanges();
+                    return Json(new ResponseDTO() { IsSuccess = true, Message = "Tag added successfully" }, JsonRequestBehavior.AllowGet);
+
+                }
+            }
+            else
+            {
+                return Json(new ResponseDTO() { IsSuccess = false, Message = "Cannot edit this article!!" }, JsonRequestBehavior.AllowGet);
+
+            }
+
+        }
+
+
+
+        [HttpPost]
+        [ValidateInput(false)]
         public ActionResult UpdateArticle(UpdateArticleDto updateArticleDto)
         {
             var userId = this.Session.GetDataFromSession<Guid>(SessionExtensions.Keys.LoggedInUserId);
@@ -124,7 +174,8 @@ namespace NationPost.API.Controllers
             }
             else
             {
-                var article = db.Articles.Where(j => j.CreatedBy.UserId == userId && j.ArticleId == updateArticleDto.AritcleId).FirstOrDefault();
+                var article = db.Articles.Where(j => j.CreatedBy.UserId == userId && j.ArticleId == updateArticleDto.AritcleId)
+                    .Include(p => p.ArticleTypeId).Include(m => m.CreatedBy).FirstOrDefault();
                 if (article != null)
                 {
                     article.Title = updateArticleDto.Title;
@@ -135,7 +186,7 @@ namespace NationPost.API.Controllers
                     article.IsVisible = updateArticleDto.IsVisible;
                     db.Entry(article).State = EntityState.Modified;
                     db.SaveChanges();
-                    return Json(new ResponseDTO() { IsSuccess = true, Message = "User information updated successfully" }, JsonRequestBehavior.AllowGet);
+                    return Json(new ResponseDTO() { IsSuccess = true, Message = "Article updated successfully" }, JsonRequestBehavior.AllowGet);
 
                 }
                 else
@@ -149,26 +200,19 @@ namespace NationPost.API.Controllers
 
 
         [HttpGet]
-        //[Route("API/User/ForgotPassword/{emailToCheck}")]
         public ActionResult ForgotPassword(string emailToCheck)
         {
-
             User user = db.Users.FirstOrDefault(k => k.Email == emailToCheck);
             if (user != null)
             {
                 MailHelper.Send("Your Username is " + user.Email + " and password is " + user.Password, "NationPost - Password retrieval", "admin@nationpost.com", user.Email);
                 return Json(new ResponseDTO() { IsSuccess = true, Message = "Mail sent successfully" });
             }
-
             return Json(new ResponseDTO() { IsSuccess = false, Message = "No account found for this email" }, JsonRequestBehavior.AllowGet);
-
         }
 
-
-
+        
         [HttpGet]
-        // [Route("API/User/IsEmailExists/{emailToCheckDuplicate}")]
-
         public ActionResult IsEmailExists(string emailToCheckDuplicate)
         {
             var foundDuplicate = db.Users.Any(k => k.Email == emailToCheckDuplicate);
