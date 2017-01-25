@@ -40,6 +40,7 @@ namespace NationPost.API.Controllers
         {
             this.Session.RemoveAll();
             this.Session.Clear();
+            this.Session.Abandon();
             return new HttpStatusCodeResult(200, "Signed Out successfully");
 
         }
@@ -133,7 +134,7 @@ namespace NationPost.API.Controllers
             var article = db.Articles.Include(p => p.ArticleTypeId).Include(m => m.CreatedBy).FirstOrDefault(j => j.CreatedBy.UserId == userId && j.ArticleId == articleId);
             if (article != null)
             {
-                if( db.ArticleTags.Include(p => p.article).Include(s => s.Tag).Any(k=> k.article.ArticleId == articleId && k.Tag.TagId== tagId))
+                if (db.ArticleTags.Include(p => p.article).Include(s => s.Tag).Any(k => k.article.ArticleId == articleId && k.Tag.TagId == tagId))
                 {
                     var tag = db.ArticleTags.Include(p => p.article).Include(s => s.Tag).FirstOrDefault(k => k.article.ArticleId == articleId && k.Tag.TagId == tagId);
                     db.ArticleTags.Remove(tag);
@@ -175,7 +176,9 @@ namespace NationPost.API.Controllers
             else
             {
                 var article = db.Articles.Where(j => j.CreatedBy.UserId == userId && j.ArticleId == updateArticleDto.AritcleId)
-                    .Include(p => p.ArticleTypeId).Include(m => m.CreatedBy).FirstOrDefault();
+                    .Include(p => p.ArticleTypeId).Include(m => m.CreatedBy)
+                    .Include(m => m.ArticleTags)
+                    .FirstOrDefault();
                 if (article != null)
                 {
                     article.Title = updateArticleDto.Title;
@@ -185,6 +188,20 @@ namespace NationPost.API.Controllers
                     article.IsValid = updateArticleDto.IsValid;
                     article.IsVisible = updateArticleDto.IsVisible;
                     db.Entry(article).State = EntityState.Modified;
+
+
+                    ////remove all 
+                    db.ArticleTags.RemoveRange(article.ArticleTags);
+                    if (updateArticleDto.Tags != null)
+                    {
+                        foreach (var tag in updateArticleDto.Tags)
+                        {
+                            var articleTag = new ArticleTags();
+                            articleTag.article = article;
+                            articleTag.Tag = db.Tags.FirstOrDefault(k => k.TagId == tag.TagId);
+                            db.ArticleTags.Add(articleTag);
+                        }
+                    }
                     db.SaveChanges();
                     return Json(new ResponseDTO() { IsSuccess = true, Message = "Article updated successfully" }, JsonRequestBehavior.AllowGet);
 
@@ -211,7 +228,7 @@ namespace NationPost.API.Controllers
             return Json(new ResponseDTO() { IsSuccess = false, Message = "No account found for this email" }, JsonRequestBehavior.AllowGet);
         }
 
-        
+
         [HttpGet]
         public ActionResult IsEmailExists(string emailToCheckDuplicate)
         {

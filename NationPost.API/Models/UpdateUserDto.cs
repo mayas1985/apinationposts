@@ -27,6 +27,8 @@ namespace NationPost.API.Models
         public string Body { get; set; }
         public bool IsValid { get; set; }
         public bool IsVisible { get; set; }
+
+        public Tag[] Tags { get; set; }
        
     }
 }

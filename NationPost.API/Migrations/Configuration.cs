@@ -70,33 +70,36 @@ namespace NationPost.API.Migrations
 
             //    }
             //    );
-            //context.Tags.AddOrUpdate(
-            //    j => j.TagId,
-            //    new Tag
-            //    {
-            //        TagDescription = "Global",
-            //        TagName = "Global"
+            context.Tags.AddOrUpdate(
+                j => j.TagId,
+                new Tag
+                {
+                    TagId = 1,
+                    TagDescription = "Global",
+                    TagName = "Global"
 
-            //    }
-            //    );
-            //context.Tags.AddOrUpdate(
-            //    j => j.TagId,
-            //    new Tag
-            //    {
-            //        TagDescription = "Local",
-            //        TagName = "Local"
+                }
+                );
+            context.Tags.AddOrUpdate(
+                j => j.TagId,
+                new Tag
+                {
+                    TagId = 2,
+                    TagDescription = "Local",
+                    TagName = "Local"
 
-            //    }
-            //    );
-            //context.Tags.AddOrUpdate(
-            //    j => j.TagId,
-            //    new Tag
-            //    {
-            //        TagDescription = "Standard",
-            //        TagName = "Standard"
+                }
+                );
+            context.Tags.AddOrUpdate(
+                j => j.TagId,
+                new Tag
+                {
+                    TagId = 3,
+                    TagDescription = "Standard",
+                    TagName = "Standard"
 
-            //    }
-            //    );
+                }
+                );
 
             //try
             //{
@@ -118,15 +121,15 @@ namespace NationPost.API.Migrations
             //    throw new Exception(sb.ToString());
             //}
 
-            //context.ArticleTypes.AddOrUpdate(
+            context.ArticleTypes.AddOrUpdate(
 
-            //    j => j.ArticleTypeId,
-            //    new ArticleType { ArticleTypeId = 1, Name = "News" },
-            //    new ArticleType { ArticleTypeId = 2, Name = "Opinion" },
-            //    new ArticleType { ArticleTypeId = 3, Name = "Event" }
-            //    );
+                j => j.ArticleTypeId,
+                new ArticleType { ArticleTypeId = 1, Name = "News" },
+                new ArticleType { ArticleTypeId = 2, Name = "Opinion" },
+                new ArticleType { ArticleTypeId = 3, Name = "Event" }
+                );
 
-            //context.SaveChanges();
+            context.SaveChanges();
             //
         }
     }
