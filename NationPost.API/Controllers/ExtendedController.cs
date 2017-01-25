@@ -175,7 +175,7 @@ namespace NationPost.API.Controllers
             }
             else
             {
-                var article = db.Articles.Where(j => j.CreatedBy.UserId == userId && j.ArticleId == updateArticleDto.AritcleId)
+                var article = db.Articles.Where(j => j.CreatedBy.UserId == userId && j.ArticleId == updateArticleDto.ArticleId)
                     .Include(p => p.ArticleTypeId).Include(m => m.CreatedBy)
                     .Include(m => m.ArticleTags)
                     .FirstOrDefault();
@@ -208,7 +208,7 @@ namespace NationPost.API.Controllers
                 }
                 else
                 {
-                    return Json(new ResponseDTO() { IsSuccess = false, Message = "Cannot edit this article!!" }, JsonRequestBehavior.AllowGet);
+                    return Json(new ResponseDTO() { IsSuccess = false, Message = "Cannot edit this article!! Article Id = " + updateArticleDto.ArticleId + " Your UserId = " + userId }, JsonRequestBehavior.AllowGet);
 
                 }
 
