@@ -49,6 +49,7 @@ namespace NationPost.API.Helper
 
             articleDTO.CreatedById = article.CreatedBy?.UserId;
             articleDTO.ArticleType = article.ArticleTypeId.ArticleTypeId;
+            articleDTO.IP = article.IP;
 
             articleDTO.Tags = new List<Tag>();
             foreach (var k in article.ArticleTags)

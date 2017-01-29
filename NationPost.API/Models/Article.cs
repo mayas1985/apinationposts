@@ -51,7 +51,7 @@ namespace NationPost.API.Models
 
         public virtual ICollection<ArticleTags> ArticleTags { get; set; }
 
-        //Tag as notMapped property, this would be utilized to allow sending tagid as a param for POST
+        //Tag as notMapped property, this would be utilized to allow sending Id as a param for POST
         [NotMapped]
         public ICollection<Tag> Tags { get; set; }
 
@@ -64,6 +64,8 @@ namespace NationPost.API.Models
         public string sublocality_level_1 { get; set; }
         public string sublocality_level_2 { get; set; }
         public string sublocality_level_3 { get; set; }
+
+        public string IP { get; set; }
 
 
     }

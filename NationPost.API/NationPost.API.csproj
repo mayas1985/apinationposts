@@ -189,6 +189,10 @@
     <Compile Include="Controllers\GoogleController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RatingsController.cs" />
+    <Compile Include="Migrations\201701291314574_Beta1.cs" />
+    <Compile Include="Migrations\201701291314574_Beta1.Designer.cs">
+      <DependentUpon>201701291314574_Beta1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\UpdateUserDto.cs" />
     <Compile Include="Helper\SessionExtensions.cs" />
     <Compile Include="Models\ResponseDTO.cs" />
@@ -200,10 +204,6 @@
     </Compile>
     <Compile Include="Helper\Extension.cs" />
     <Compile Include="Helper\MailHelper.cs" />
-    <Compile Include="Migrations\201605310643503_initial.cs" />
-    <Compile Include="Migrations\201605310643503_initial.Designer.cs">
-      <DependentUpon>201605310643503_initial.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Article.cs" />
     <Compile Include="Models\ArticleRatings.cs" />
@@ -344,8 +344,8 @@
     <Folder Include="Views\Extended\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201605310643503_initial.resx">
-      <DependentUpon>201605310643503_initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201701291314574_Beta1.resx">
+      <DependentUpon>201701291314574_Beta1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

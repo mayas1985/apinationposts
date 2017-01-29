@@ -51,5 +51,8 @@ namespace NationPost.API.Models
         public String Token { get; set; }
         public string GoogleLink { get; internal set; }
         public string IsGoogleLinkVisible { get; internal set; }
+
+        [MaxLength(100)]
+        public string UserName { get; set; }
     }
 }

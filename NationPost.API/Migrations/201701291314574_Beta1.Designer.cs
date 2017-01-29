@@ -7,13 +7,13 @@ namespace NationPost.API.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class initial : IMigrationMetadata
+    public sealed partial class Beta1 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(initial));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Beta1));
         
         string IMigrationMetadata.Id
         {
-            get { return "201605310643503_initial"; }
+            get { return "201701291314574_Beta1"; }
         }
         
         string IMigrationMetadata.Source

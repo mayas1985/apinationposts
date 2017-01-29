@@ -22,7 +22,7 @@ namespace NationPost.API.Controllers
         public IQueryable<Tag> GetTags(string search = "")
         {
 
-            return  string.IsNullOrWhiteSpace(search)? db.Tags:db.Tags.Where(k=> k.TagName.StartsWith(search));
+            return  string.IsNullOrWhiteSpace(search)? db.Tags:db.Tags.Where(k=> k.Name.StartsWith(search));
         }
 
         // GET api/Tags/5
@@ -47,7 +47,7 @@ namespace NationPost.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != tag.TagId)
+            if (id != tag.Id)
             {
                 return BadRequest();
             }
@@ -85,7 +85,7 @@ namespace NationPost.API.Controllers
             db.Tags.Add(tag);
             db.SaveChanges();
 
-            return CreatedAtRoute("api_Tags", new { id = tag.TagId }, tag);
+            return CreatedAtRoute("api_Tags", new { id = tag.Id }, tag);
         }
 
         // DELETE api/Tags/5
@@ -115,7 +115,7 @@ namespace NationPost.API.Controllers
 
         private bool TagExists(int id)
         {
-            return db.Tags.Count(e => e.TagId == id) > 0;
+            return db.Tags.Count(e => e.Id == id) > 0;
         }
     }
 }

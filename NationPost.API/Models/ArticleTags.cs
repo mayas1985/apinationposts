@@ -12,8 +12,8 @@ namespace NationPost.API.Models
     {
         [Key]
         public int ArticleTagId { get; set; }
-        public Article article { get; set; }
-        public Tag Tag { get; set; }
+        public virtual Article article { get; set; }
+        public virtual Tag Tag { get; set; }
     }
 }
 

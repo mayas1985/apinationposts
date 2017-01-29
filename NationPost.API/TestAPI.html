@@ -40,7 +40,7 @@
                 $.post("/extended/ToggleTag",
                 {
                     articleId: $('#extArticleId').val(),
-                    tagId: 1
+                    Id: 1
                 },
                 function (data, status) {
                     alert("Data: " + data + "\nStatus: " + status);
@@ -67,7 +67,7 @@
                     //CreatedById: "02fdad93-2a4c-40d0-bc22-944af629f7c4",
                     CreatedBy: { "UserId": "00000000-0000-0000-0000-000000000000", "UserName": "dummy", "Password": "dummy", "Email": "mayas1986@gmail.com" },
                     ArticleTypeId: { "ArticleTypeId": $("#isNews").is(":checked") ? 1 : 2 },
-                    Tags: [{ "TagId": 1 }, { "TagId": 2 }],
+                    Tags: [{ "Id": 1 }, { "Id": 2 }],
                     Longtitude: "asdfasdf",
                     Latitude: "asdfasdf",
                     Country: "India",
@@ -199,7 +199,7 @@
                     url: "/api/articles",
                     dataType: "json",
                     type: "GET",
-                    data: { tagId: $("#txtTagId").val() },
+                    data: { Id: $("#txtId").val() },
 
                     contentType: "application/json",
 
@@ -227,7 +227,7 @@
 
         <input type="text" id="extArticleId" placeholder="ArticleGUid" value="E0088FFA-9DA6-4E96-90CB-3D27F705144C" />
         <button id="buttonUpdateArticle">Update Article</button>
-        <button id="buttonAddRemoveTag">Toggle TagID1</button>
+        <button id="buttonAddRemoveTag">Toggle Id1</button>
 
 
     </fieldset>
@@ -269,7 +269,7 @@
 
         <button id="buttonGetArticleAll">Get All Article</button><br />
         <br />
-        <input type="text" placeholder="tagId" id="txtTagId" />
+        <input type="text" placeholder="Id" id="txtId" />
         <button id="buttonGetArticleByTag">Get Article By Tag</button><br />
         <br />
         <input type="text" placeholder="articleIdGuid" id="txtRatingArticleId" />

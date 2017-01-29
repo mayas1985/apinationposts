@@ -122,7 +122,7 @@ namespace NationPost.API.Controllers
         }
 
         [HttpPost]
-        public ActionResult ToggleTag(Guid articleId, int tagId)
+        public ActionResult ToggleTag(Guid articleId, int Id)
         {
             var userId = this.Session.GetDataFromSession<Guid>(SessionExtensions.Keys.LoggedInUserId);
             if (userId == Guid.Empty)
@@ -133,9 +133,9 @@ namespace NationPost.API.Controllers
             var article = db.Articles.Include(p => p.ArticleTypeId).Include(m => m.CreatedBy).FirstOrDefault(j => j.CreatedBy.UserId == userId && j.ArticleId == articleId);
             if (article != null)
             {
-                if( db.ArticleTags.Include(p => p.article).Include(s => s.Tag).Any(k=> k.article.ArticleId == articleId && k.Tag.TagId== tagId))
+                if (db.ArticleTags.Include(p => p.article).Include(s => s.Tag).Any(k => k.article.ArticleId == articleId && k.Tag.Id == Id))
                 {
-                    var tag = db.ArticleTags.Include(p => p.article).Include(s => s.Tag).FirstOrDefault(k => k.article.ArticleId == articleId && k.Tag.TagId == tagId);
+                    var tag = db.ArticleTags.Include(p => p.article).Include(s => s.Tag).FirstOrDefault(k => k.article.ArticleId == articleId && k.Tag.Id == Id);
                     db.ArticleTags.Remove(tag);
                     db.SaveChanges();
                     return Json(new ResponseDTO() { IsSuccess = true, Message = "Tag removed successfully" }, JsonRequestBehavior.AllowGet);
@@ -145,7 +145,7 @@ namespace NationPost.API.Controllers
                 {
                     var articleTag = new ArticleTags();
                     articleTag.article = article;
-                    articleTag.Tag = db.Tags.FirstOrDefault(k => k.TagId == tagId);
+                    articleTag.Tag = db.Tags.FirstOrDefault(k => k.Id == Id);
                     db.ArticleTags.Add(articleTag);
                     db.SaveChanges();
                     return Json(new ResponseDTO() { IsSuccess = true, Message = "Tag added successfully" }, JsonRequestBehavior.AllowGet);
@@ -160,6 +160,31 @@ namespace NationPost.API.Controllers
 
         }
 
+        [HttpPost]
+        public ActionResult DeleteArticle(Guid articleId)
+        {
+            var userId = this.Session.GetDataFromSession<Guid>(SessionExtensions.Keys.LoggedInUserId);
+            if (userId == Guid.Empty)
+            {
+                return Json(new ResponseDTO() { IsSuccess = false, Message = "User not logged In" }, JsonRequestBehavior.AllowGet);
+
+            }
+
+            var article = db.Articles.Include(p => p.ArticleTypeId).Include(m => m.CreatedBy).FirstOrDefault(j => j.CreatedBy.UserId == userId && j.ArticleId == articleId);
+            if (article != null)
+            {
+                article.IsVisible = false;
+                db.SaveChanges();
+                return Json(new ResponseDTO() { IsSuccess = true, Message = "Article updated successfully" }, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(new ResponseDTO() { IsSuccess = false, Message = "Cannot edit this article!!" }, JsonRequestBehavior.AllowGet);
+
+            }
+
+        }
 
 
         [HttpPost]
@@ -211,7 +236,7 @@ namespace NationPost.API.Controllers
             return Json(new ResponseDTO() { IsSuccess = false, Message = "No account found for this email" }, JsonRequestBehavior.AllowGet);
         }
 
-        
+
         [HttpGet]
         public ActionResult IsEmailExists(string emailToCheckDuplicate)
         {

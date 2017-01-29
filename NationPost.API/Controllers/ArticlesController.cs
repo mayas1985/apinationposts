@@ -46,7 +46,7 @@ namespace NationPost.API.Controllers
             sortOrder = String.IsNullOrEmpty(sortOrder) ? "createdon_desc" : sortOrder;
 
 
-            var articles = from s in db.Articles
+            var articles = from s in db.Articles.Where(k => k.IsValid && k.IsVisible)
                                //where s.ArticleTypeId.ArticleTypeId == articleTypeId
                            select s;
             if (articleTypeId != null)
@@ -89,10 +89,10 @@ namespace NationPost.API.Controllers
                     articles = articles.Where(k => k.CreatedOn > monthback && k.Rating > 5).OrderByDescending(s => s.Rating);
                     break;
                 case "recommended_desc":
-                    articles = articles.OrderByDescending(s => s.Rating);
+                    articles = articles.OrderByDescending(s => s.TotalRating);
                     break;
                 case "trend_desc":
-                    articles = articles.Where(k => k.CreatedOn > monthback && k.Rating > 5).OrderByDescending(s => s.Rating);
+                    articles = articles.Where(k => k.Rating > 5).OrderByDescending(s => s.CreatedOn);
                     break;
                 case "like_desc":
                     articles = articles.Where(k => k.CreatedOn > monthback).OrderByDescending(s => s.Like);
@@ -107,7 +107,7 @@ namespace NationPost.API.Controllers
                     break;
             }
 
-            var lst = articles.Include(m => m.ArticleTypeId).Include(j => j.ArticleTags.Select(m => m.Tag)).ToPagedList(pageNumber, pageSize).ToList();
+            var lst = articles.Include(x => x.CreatedBy).Include(m => m.ArticleTypeId).Include(j => j.ArticleTags.Select(m => m.Tag)).ToPagedList(pageNumber, pageSize).ToList();
             return lst.ToDTO();
         }
 
@@ -121,7 +121,7 @@ namespace NationPost.API.Controllers
 
         public IEnumerable<ArticleDTO> GetArticlesByTag(int tagId)
         {
-            return db.Articles.Where(k => k.ArticleTags.Any(m => m.Tag.TagId == tagId))
+            return db.Articles.Where(k => k.ArticleTags.Any(m => m.Tag.Id == tagId) && k.IsValid && k.IsVisible)
                 .Include(j => j.ArticleTypeId)
                 .Include(m => m.CreatedBy)
                 .Include(j => j.ArticleTags.Select(m => m.Tag))
@@ -208,7 +208,7 @@ namespace NationPost.API.Controllers
                 newuser = new User();
                 newuser.CreatedOn = DateTime.Now;
                 newuser.UserId = Guid.NewGuid();
-                //newuser.UserName = article.CreatedBy.Email;
+                newuser.UserName = article.CreatedBy.UserName;
                 newuser.Email = article.CreatedBy.Email;
                 newuser.Password = "Password" + new Random().Next(10000, 99999).ToString();
 
@@ -246,7 +246,7 @@ namespace NationPost.API.Controllers
             {
                 var articleTag = new ArticleTags();
                 articleTag.article = article;
-                articleTag.Tag = db.Tags.FirstOrDefault(k => k.TagId == tag.TagId);
+                articleTag.Tag = db.Tags.FirstOrDefault(k => k.Id == tag.Id);
                 db.ArticleTags.Add(articleTag);
             }
 

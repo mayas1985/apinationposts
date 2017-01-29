@@ -12,7 +12,7 @@ namespace NationPost.API.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true; AutomaticMigrationDataLossAllowed = true;
+           // AutomaticMigrationsEnabled = true; AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(APIContext context)
@@ -70,33 +70,24 @@ namespace NationPost.API.Migrations
 
             //    }
             //    );
-            //context.Tags.AddOrUpdate(
-            //    j => j.TagId,
-            //    new Tag
-            //    {
-            //        TagDescription = "Global",
-            //        TagName = "Global"
+                        context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Legal Mishaps in India", Name ="Legal Mishaps in India" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Government Policies", Name ="Government Policies" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Politics", Name ="Politics" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "SOCIO-POLITICAL", Name ="SOCIO-POLITICAL" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Economic Development ", Name ="Economic Development " });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Finance ", Name ="Finance " });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Equitable GDP growth ", Name ="Equitable GDP growth " });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Balanced politics", Name ="Balanced politics" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Make UN effective", Name =" Make UN effective" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "POLITICS OF GANDHIAN", Name ="POLITICS OF GANDHIAN" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "FURTHER PANCHAYAT RAJ", Name =" FURTHER PANCHAYAT RAJ" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "RAMRAJYA OF GANDHIAN DREAMS ", Name =" RAMRAJYA OF GANDHIAN DREAMS " });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "ELECTION WITH NIL EXPENDITURE EMPOWERED PANCHAYAT", Name ="ELECTION WITH NIL EXPENDITURE EMPOWERED PANCHAYAT" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "RIGHT TO Recall", Name ="RIGHT TO Recall" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "politics culture ", Name ="politics culture " });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "world news ", Name ="world news " });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "science", Name ="science" });
 
-            //    }
-            //    );
-            //context.Tags.AddOrUpdate(
-            //    j => j.TagId,
-            //    new Tag
-            //    {
-            //        TagDescription = "Local",
-            //        TagName = "Local"
-
-            //    }
-            //    );
-            //context.Tags.AddOrUpdate(
-            //    j => j.TagId,
-            //    new Tag
-            //    {
-            //        TagDescription = "Standard",
-            //        TagName = "Standard"
-
-            //    }
-            //    );
 
             //try
             //{
@@ -118,13 +109,12 @@ namespace NationPost.API.Migrations
             //    throw new Exception(sb.ToString());
             //}
 
-            //context.ArticleTypes.AddOrUpdate(
+            context.ArticleTypes.AddOrUpdate(
 
-            //    j => j.ArticleTypeId,
-            //    new ArticleType { ArticleTypeId = 1, Name = "News" },
-            //    new ArticleType { ArticleTypeId = 2, Name = "Opinion" },
-            //    new ArticleType { ArticleTypeId = 3, Name = "Event" }
-            //    );
+                j => j.ArticleTypeId,
+                new ArticleType { ArticleTypeId = 1, Name = "News" },
+                new ArticleType { ArticleTypeId = 2, Name = "Opinion" }
+                );
 
             //context.SaveChanges();
             //
