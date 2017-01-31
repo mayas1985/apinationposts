@@ -40,6 +40,7 @@ namespace NationPost.API.Controllers
         {
             this.Session.RemoveAll();
             this.Session.Clear();
+            this.Session.Abandon();
             return new HttpStatusCodeResult(200, "Signed Out successfully");
 
         }
@@ -199,8 +200,10 @@ namespace NationPost.API.Controllers
             }
             else
             {
-                var article = db.Articles.Where(j => j.CreatedBy.UserId == userId && j.ArticleId == updateArticleDto.AritcleId)
-                    .Include(p => p.ArticleTypeId).Include(m => m.CreatedBy).FirstOrDefault();
+                var article = db.Articles.Where(j => j.CreatedBy.UserId == userId && j.ArticleId == updateArticleDto.ArticleId)
+                    .Include(p => p.ArticleTypeId).Include(m => m.CreatedBy)
+                    .Include(m => m.ArticleTags)
+                    .FirstOrDefault();
                 if (article != null)
                 {
                     article.Title = updateArticleDto.Title;
@@ -210,13 +213,27 @@ namespace NationPost.API.Controllers
                     article.IsValid = updateArticleDto.IsValid;
                     article.IsVisible = updateArticleDto.IsVisible;
                     db.Entry(article).State = EntityState.Modified;
+
+
+                    ////remove all 
+                    db.ArticleTags.RemoveRange(article.ArticleTags);
+                    if (updateArticleDto.Tags != null)
+                    {
+                        foreach (var tag in updateArticleDto.Tags)
+                        {
+                            var articleTag = new ArticleTags();
+                            articleTag.article = article;
+                            articleTag.Tag = db.Tags.FirstOrDefault(k => k.Id == tag.Id);
+                            db.ArticleTags.Add(articleTag);
+                        }
+                    }
                     db.SaveChanges();
                     return Json(new ResponseDTO() { IsSuccess = true, Message = "Article updated successfully" }, JsonRequestBehavior.AllowGet);
 
                 }
                 else
                 {
-                    return Json(new ResponseDTO() { IsSuccess = false, Message = "Cannot edit this article!!" }, JsonRequestBehavior.AllowGet);
+                    return Json(new ResponseDTO() { IsSuccess = false, Message = "Cannot edit this article!! Article Id = " + updateArticleDto.ArticleId + " Your UserId = " + userId }, JsonRequestBehavior.AllowGet);
 
                 }
 
@@ -236,7 +253,7 @@ namespace NationPost.API.Controllers
             return Json(new ResponseDTO() { IsSuccess = false, Message = "No account found for this email" }, JsonRequestBehavior.AllowGet);
         }
 
-
+        
         [HttpGet]
         public ActionResult IsEmailExists(string emailToCheckDuplicate)
         {

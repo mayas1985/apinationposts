@@ -20,13 +20,15 @@ namespace NationPost.API.Models
     }
     public class UpdateArticleDto
     {
-        public Guid AritcleId { get; set; }
+        public Guid ArticleId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Summary { get; set; }
         public string Body { get; set; }
         public bool IsValid { get; set; }
         public bool IsVisible { get; set; }
+
+        public Tag[] Tags { get; set; }
        
     }
 }

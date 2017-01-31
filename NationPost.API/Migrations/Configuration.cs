@@ -116,7 +116,7 @@ namespace NationPost.API.Migrations
                 new ArticleType { ArticleTypeId = 2, Name = "Opinion" }
                 );
 
-            //context.SaveChanges();
+            context.SaveChanges();
             //
         }
     }
