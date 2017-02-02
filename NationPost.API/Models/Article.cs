@@ -78,6 +78,6 @@ namespace NationPost.API.Models
         [Required]
         public int ArticleType { get; set; }
 
-
+        public string CreatedByUserName { get; set; }
     }
 }

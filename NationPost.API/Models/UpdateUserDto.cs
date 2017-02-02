@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace NationPost.API.Models
 {
@@ -14,9 +15,11 @@ namespace NationPost.API.Models
         public bool IsTwitterLinkVisible { get; set; }
 
         public string Contact { get; set; }
-        public string IsContactVisible { get; set; }
-        public string GoogleLink { get; internal set; }
-        public string IsGoogleLinkVisible { get; internal set; }
+
+        public bool IsContactVisible { get; set; }
+        public string GoogleLink { get; set; }
+
+        public bool IsGoogleLinkVisible { get; set; }
     }
     public class UpdateArticleDto
     {
@@ -29,6 +32,6 @@ namespace NationPost.API.Models
         public bool IsVisible { get; set; }
 
         public Tag[] Tags { get; set; }
-       
+
     }
 }

@@ -45,12 +45,12 @@ namespace NationPost.API.Models
 
 
         public string Contact { get; set; }
-        public string IsContactVisible { get; set; }
+        public bool IsContactVisible { get; set; }
 
         //public DbGeography coords { get; set; }
         public String Token { get; set; }
         public string GoogleLink { get; internal set; }
-        public string IsGoogleLinkVisible { get; internal set; }
+        public bool IsGoogleLinkVisible { get; internal set; }
 
         [MaxLength(100)]
         public string UserName { get; set; }

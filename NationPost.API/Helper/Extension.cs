@@ -48,6 +48,7 @@ namespace NationPost.API.Helper
 
 
             articleDTO.CreatedById = article.CreatedBy?.UserId;
+            articleDTO.CreatedByUserName = article.CreatedBy?.UserName;
             articleDTO.ArticleType = article.ArticleTypeId.ArticleTypeId;
             articleDTO.IP = article.IP;
 

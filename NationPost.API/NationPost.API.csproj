@@ -193,6 +193,10 @@
     <Compile Include="Migrations\201701291314574_Beta1.Designer.cs">
       <DependentUpon>201701291314574_Beta1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702021608492_Beta1_2.cs" />
+    <Compile Include="Migrations\201702021608492_Beta1_2.Designer.cs">
+      <DependentUpon>201702021608492_Beta1_2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\UpdateUserDto.cs" />
     <Compile Include="Helper\SessionExtensions.cs" />
     <Compile Include="Models\ResponseDTO.cs" />
@@ -346,6 +350,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201701291314574_Beta1.resx">
       <DependentUpon>201701291314574_Beta1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702021608492_Beta1_2.resx">
+      <DependentUpon>201702021608492_Beta1_2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

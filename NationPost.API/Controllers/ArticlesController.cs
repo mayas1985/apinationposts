@@ -92,7 +92,7 @@ namespace NationPost.API.Controllers
                     articles = articles.OrderByDescending(s => s.TotalRating);
                     break;
                 case "trend_desc":
-                    articles = articles.Where(k => k.Rating > 5).OrderByDescending(s => s.CreatedOn);
+                    articles = articles.Where(k => k.TotalRating > 5).OrderByDescending(s => s.CreatedOn);
                     break;
                 case "like_desc":
                     articles = articles.Where(k => k.CreatedOn > monthback).OrderByDescending(s => s.Like);

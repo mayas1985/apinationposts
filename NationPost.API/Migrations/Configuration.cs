@@ -12,7 +12,7 @@ namespace NationPost.API.Migrations
     {
         public Configuration()
         {
-           // AutomaticMigrationsEnabled = true; AutomaticMigrationDataLossAllowed = true;
+            // AutomaticMigrationsEnabled = true; AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(APIContext context)
@@ -70,23 +70,30 @@ namespace NationPost.API.Migrations
 
             //    }
             //    );
-                        context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Legal Mishaps in India", Name ="Legal Mishaps in India" });
-            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Government Policies", Name ="Government Policies" });
-            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Politics", Name ="Politics" });
-            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "SOCIO-POLITICAL", Name ="SOCIO-POLITICAL" });
-            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Economic Development ", Name ="Economic Development " });
-            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Finance ", Name ="Finance " });
-            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Equitable GDP growth ", Name ="Equitable GDP growth " });
-            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Balanced politics", Name ="Balanced politics" });
-            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Make UN effective", Name =" Make UN effective" });
-            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "POLITICS OF GANDHIAN", Name ="POLITICS OF GANDHIAN" });
-            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "FURTHER PANCHAYAT RAJ", Name =" FURTHER PANCHAYAT RAJ" });
-            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "RAMRAJYA OF GANDHIAN DREAMS ", Name =" RAMRAJYA OF GANDHIAN DREAMS " });
-            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "ELECTION WITH NIL EXPENDITURE EMPOWERED PANCHAYAT", Name ="ELECTION WITH NIL EXPENDITURE EMPOWERED PANCHAYAT" });
-            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "RIGHT TO Recall", Name ="RIGHT TO Recall" });
-            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "politics culture ", Name ="politics culture " });
-            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "world news ", Name ="world news " });
-            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "science", Name ="science" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Legal Mishaps in India", Name = "Legal Mishaps in India" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Government Policies", Name = "Government Policies" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Politics", Name = "Politics" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "SOCIO-POLITICAL", Name = "SOCIO-POLITICAL" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Economic Development ", Name = "Economic Development " });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Finance ", Name = "Finance " });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Equitable GDP growth ", Name = "Equitable GDP growth " });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Balanced politics", Name = "Balanced politics" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Make UN effective", Name = " Make UN effective" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "POLITICS OF GANDHIAN", Name = "POLITICS OF GANDHIAN" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "FURTHER PANCHAYAT RAJ", Name = " FURTHER PANCHAYAT RAJ" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "RAMRAJYA OF GANDHIAN DREAMS ", Name = " RAMRAJYA OF GANDHIAN DREAMS " });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "ELECTION WITH NIL EXPENDITURE EMPOWERED PANCHAYAT", Name = "ELECTION WITH NIL EXPENDITURE EMPOWERED PANCHAYAT" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "RIGHT TO Recall", Name = "RIGHT TO Recall" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "politics culture ", Name = "politics culture " });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "world news ", Name = "world news " });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "science", Name = "science" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Demonetization", Name = "Demonetization" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Spirituality", Name = "Spirituality" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Current Affairs", Name = "Current Affairs" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Sports", Name = "Sports" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Cinema", Name = "Cinema" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Modi", Name = "Modi" });
+            context.Tags.AddOrUpdate(j => j.Id, new Tag { Description = "Economy", Name = "Economy" });
 
 
             //try
