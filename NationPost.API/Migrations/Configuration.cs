@@ -12,7 +12,8 @@ namespace NationPost.API.Migrations
     {
         public Configuration()
         {
-            // AutomaticMigrationsEnabled = true; AutomaticMigrationDataLossAllowed = true;
+            AutomaticMigrationsEnabled = false;
+                //; AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(APIContext context)

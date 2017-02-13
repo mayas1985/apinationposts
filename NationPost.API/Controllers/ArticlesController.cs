@@ -13,12 +13,18 @@ using NationPost.API.Models;
 using PagedList;
 using NationPost.API.Helper;
 using System.Data.Entity.Validation;
+using System.Diagnostics;
 
 namespace NationPost.API.Controllers
 {
     public class ArticlesController : ApiController
     {
         private APIContext db = new APIContext();
+
+        public ArticlesController()
+        {
+            db.Database.Log = sql => Debug.Write(sql);
+        }
 
         //[Route("api/articles/paged/{pageNumber=pageNumber}/{pageSize=pageSize}/{userId=userId}/{sortOrder=sortOrder}/{searchString=searchString}")]
 
@@ -106,9 +112,55 @@ namespace NationPost.API.Controllers
                     articles = articles.OrderBy(s => s.CreatedOn);
                     break;
             }
+            var query = articles.Include(x => x.CreatedBy).Include(m => m.ArticleTypeId).Include(j => j.ArticleTags.Select(m => m.Tag));
 
-            var lst = articles.Include(x => x.CreatedBy).Include(m => m.ArticleTypeId).Include(j => j.ArticleTags.Select(m => m.Tag)).ToPagedList(pageNumber, pageSize).ToList();
-            return lst.ToDTO();
+            query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            var lst = query.Select(k => new ArticleDTO()
+            {
+                administrative_area_level_1 = k.administrative_area_level_1,
+                administrative_area_level_2 = k.administrative_area_level_2,
+                ArticleId = k.ArticleId,
+                ArticleTags = k.ArticleTags,
+                Summary = k.Summary,
+                ArticleTypeId = k.ArticleTypeId,
+                Country = k.Country,
+                CreatedOn = k.CreatedOn,
+                Description = k.Description,
+                Dislike = k.Dislike,
+                IP = k.IP,
+                IsValid = k.IsValid,
+                IsVisible = k.IsVisible,
+                Latitude = k.Latitude,
+                Like = k.Like,
+                locality = k.locality,
+                Longtitude = k.Longtitude,
+                Rating = k.Rating,
+                sublocality_level_1 = k.sublocality_level_1,
+                sublocality_level_2 = k.sublocality_level_2,
+                sublocality_level_3 = k.sublocality_level_3,
+                Title = k.Title,
+                TotalRating = k.TotalRating,
+                CreatedBy = k.CreatedBy,
+                CreatedById = k.CreatedBy.UserId,
+                CreatedByUserName = k.CreatedBy.UserName
+                //Tags = k.Tags
+            }).ToList();
+            lst.ForEach(k => Extract(k));
+
+            return lst;//.ToDTO();
+        }
+
+        private static void Extract(ArticleDTO k)
+        {
+            var articleTags = k.ArticleTags;
+            if (articleTags != null)
+            {
+                k.Tags = new List<Tag>();
+                foreach (var j in articleTags)
+                {
+                    k.Tags.Add(j.Tag);
+                }
+            }
         }
 
         // GET api/Articles
@@ -121,11 +173,44 @@ namespace NationPost.API.Controllers
 
         public IEnumerable<ArticleDTO> GetArticlesByTag(int tagId)
         {
-            return db.Articles.Where(k => k.ArticleTags.Any(m => m.Tag.Id == tagId) && k.IsValid && k.IsVisible)
+            var query = db.Articles.Where(k => k.ArticleTags.Any(m => m.Tag.Id == tagId) && k.IsValid && k.IsVisible)
                 .Include(j => j.ArticleTypeId)
                 .Include(m => m.CreatedBy)
-                .Include(j => j.ArticleTags.Select(m => m.Tag))
-                .ToList().ToDTO();
+                .Include(j => j.ArticleTags.Select(m => m.Tag));
+            var lst = query.Select(k => new ArticleDTO()
+            {
+                administrative_area_level_1 = k.administrative_area_level_1,
+                administrative_area_level_2 = k.administrative_area_level_2,
+                ArticleId = k.ArticleId,
+                ArticleTags = k.ArticleTags,
+                Summary = k.Summary,
+                ArticleTypeId = k.ArticleTypeId,
+                Country = k.Country,
+                CreatedOn = k.CreatedOn,
+                Description = k.Description,
+                Dislike = k.Dislike,
+                IP = k.IP,
+                IsValid = k.IsValid,
+                IsVisible = k.IsVisible,
+                Latitude = k.Latitude,
+                Like = k.Like,
+                locality = k.locality,
+                Longtitude = k.Longtitude,
+                Rating = k.Rating,
+                sublocality_level_1 = k.sublocality_level_1,
+                sublocality_level_2 = k.sublocality_level_2,
+                sublocality_level_3 = k.sublocality_level_3,
+                Title = k.Title,
+                TotalRating = k.TotalRating,
+                CreatedBy = k.CreatedBy,
+                Tags = k.Tags,
+                CreatedById = k.CreatedBy.UserId,
+                CreatedByUserName = k.CreatedBy.UserName
+            }).ToList();
+            lst.ForEach(k => Extract(k));
+
+
+            return lst;
         }
 
 
