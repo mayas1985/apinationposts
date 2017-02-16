@@ -13,13 +13,9 @@ namespace NationPost.API.Context
         public APIContext()
             : base("DefaultConnection")
         {
-            ////removing code first
-            //Database.SetInitializer<APIContext>(new CreateDatabaseIfNotExists<APIContext>());
-            this.Configuration.LazyLoadingEnabled = false;
-            this.Configuration.AutoDetectChangesEnabled = false;
-            this.Configuration.ProxyCreationEnabled = false;
-
-            Database.SetInitializer<APIContext>(null);
+            //       Database.SetInitializer<APIContext>(
+            //new MigrateDatabaseToLatestVersion<APIContext, NationPost.API.Migrations.Configuration>());
+            Database.SetInitializer<APIContext>(new CreateDatabaseIfNotExists<APIContext>());
         }
 
 
