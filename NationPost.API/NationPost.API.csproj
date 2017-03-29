@@ -190,9 +190,6 @@
     <Compile Include="Controllers\GoogleController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RatingsController.cs" />
-    <Compile Include="handler\Upload.ashx.cs">
-      <DependentUpon>Upload.ashx</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201701291314574_Beta1.cs" />
     <Compile Include="Migrations\201701291314574_Beta1.Designer.cs">
       <DependentUpon>201701291314574_Beta1.cs</DependentUpon>
@@ -298,7 +295,6 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <Content Include=".travis.yml" />
-    <Content Include="handler\Upload.ashx" />
     <None Include="Properties\PublishProfiles\godaddy.pubxml" />
     <None Include="Properties\PublishProfiles\Localfile.pubxml" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />

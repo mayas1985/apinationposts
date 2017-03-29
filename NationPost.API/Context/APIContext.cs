@@ -15,7 +15,9 @@ namespace NationPost.API.Context
         {
             //       Database.SetInitializer<APIContext>(
             //new MigrateDatabaseToLatestVersion<APIContext, NationPost.API.Migrations.Configuration>());
-            Database.SetInitializer<APIContext>(new CreateDatabaseIfNotExists<APIContext>());
+         //   Database.SetInitializer<APIContext>(new CreateDatabaseIfNotExists<APIContext>());
+            //Disable initializer
+            Database.SetInitializer<APIContext>(null);
         }
 
 

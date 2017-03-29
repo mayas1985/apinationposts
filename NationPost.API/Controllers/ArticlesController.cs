@@ -46,9 +46,8 @@ namespace NationPost.API.Controllers
             sortOrder = String.IsNullOrEmpty(sortOrder) ? "createdon_desc" : sortOrder;
 
 
-            var articles = from s in db.Articles.Where(k => k.IsValid && k.IsVisible)
+            var articles = db.Articles.Where(k => k.IsValid && k.IsVisible);
                                //where s.ArticleTypeId.ArticleTypeId == articleTypeId
-                           select s;
             if (articleTypeId != null)
                 articles = articles.Where(k => k.ArticleTypeId.ArticleTypeId == articleTypeId);
 
