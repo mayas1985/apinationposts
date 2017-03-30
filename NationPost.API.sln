@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NationPost.API", "NationPost.API\NationPost.API.csproj", "{A3BABC22-8158-4979-8584-BAF91A1CB3A6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NationPost.UI", "NationPost.UI\NationPost.UI.csproj", "{97E98932-8D3C-4192-BA60-307D45BFCEA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NationPost.DAL", "NationPost.DAL\NationPost.DAL.csproj", "{9EEEC504-A9C0-47B5-936D-8BDF3E1BD115}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{97E98932-8D3C-4192-BA60-307D45BFCEA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97E98932-8D3C-4192-BA60-307D45BFCEA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97E98932-8D3C-4192-BA60-307D45BFCEA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EEEC504-A9C0-47B5-936D-8BDF3E1BD115}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EEEC504-A9C0-47B5-936D-8BDF3E1BD115}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EEEC504-A9C0-47B5-936D-8BDF3E1BD115}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EEEC504-A9C0-47B5-936D-8BDF3E1BD115}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

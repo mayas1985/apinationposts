@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 11.375" name="BlogDBContextLinq">
+  <DataContextMoniker Name="/BlogDBContextLinqDataContext" />
+  <nestedChildShapes>
+    <classShape Id="363ee50e-cb15-4cb3-81dd-885fbd570670" absoluteBounds="6.75, 5.75, 2, 1.9631982421875005">
+      <DataClassMoniker Name="/BlogDBContextLinqDataContext/ArticleRating" />
+      <nestedChildShapes>
+        <elementListCompartment Id="babb1b9e-665e-43e7-8cf3-bdfdba8f6091" absoluteBounds="6.765, 6.21, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="542f5484-75db-43ce-bd4e-0b5bad0bf8d0" absoluteBounds="0.75, 6.625, 2, 4.4631168619791666">
+      <DataClassMoniker Name="/BlogDBContextLinqDataContext/User" />
+      <nestedChildShapes>
+        <elementListCompartment Id="cd511286-59a5-49a3-bbaa-f111446fb118" absoluteBounds="0.765, 7.085, 1.9700000000000002, 3.903116861979167" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="5ab22640-65c2-4023-bd54-55121d266959" absoluteBounds="3.5, 1.125, 2, 5.4246240234375">
+      <DataClassMoniker Name="/BlogDBContextLinqDataContext/Article" />
+      <nestedChildShapes>
+        <elementListCompartment Id="8704c674-f1b9-45c7-9dfe-c0006f6e86c1" absoluteBounds="3.515, 1.585, 1.9700000000000002, 4.8646240234375" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="743b7156-c44e-4aee-9391-3801cc2ce1fd" absoluteBounds="6.25, 3.125, 2, 1.3862939453124996">
+      <DataClassMoniker Name="/BlogDBContextLinqDataContext/ArticleTag" />
+      <nestedChildShapes>
+        <elementListCompartment Id="982c15a1-64ba-4e57-9f71-0c3e8221960d" absoluteBounds="6.265, 3.585, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="864fc0c1-bc6f-46e6-98b3-8bee49727f40" absoluteBounds="0.75, 3.25, 2, 1.1939925130208335">
+      <DataClassMoniker Name="/BlogDBContextLinqDataContext/ArticleType" />
+      <nestedChildShapes>
+        <elementListCompartment Id="db067933-9a98-4b7d-8b7d-4f2503bf3cd9" absoluteBounds="0.765, 3.71, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="cc0b1f9e-9c22-4a42-8c12-84c25d733fbb" absoluteBounds="3.5, 8.125, 2, 1.3862939453124987">
+      <DataClassMoniker Name="/BlogDBContextLinqDataContext/Tag" />
+      <nestedChildShapes>
+        <elementListCompartment Id="775f23a2-cadb-457a-8c2e-0e43569dc0f5" absoluteBounds="3.515, 8.585, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(2.75 : 6.62653746153846); (3.125 : 6.25153746153846); (3.125 : 6.92616148497596); (3.50153746153846 : 6.5496240234375)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/BlogDBContextLinqDataContext/User/User_Article" />
+      <nodes>
+        <classShapeMoniker Id="542f5484-75db-43ce-bd4e-0b5bad0bf8d0" />
+        <classShapeMoniker Id="5ab22640-65c2-4023-bd54-55121d266959" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.5 : 3.81814697265625); (6.25 : 3.81814697265625)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/BlogDBContextLinqDataContext/Article/Article_ArticleTag" />
+      <nodes>
+        <classShapeMoniker Id="5ab22640-65c2-4023-bd54-55121d266959" />
+        <classShapeMoniker Id="743b7156-c44e-4aee-9391-3801cc2ce1fd" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.75 : 3.84699625651042); (3.5 : 3.84699625651042)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/BlogDBContextLinqDataContext/ArticleType/ArticleType_Article" />
+      <nodes>
+        <classShapeMoniker Id="864fc0c1-bc6f-46e6-98b3-8bee49727f40" />
+        <classShapeMoniker Id="5ab22640-65c2-4023-bd54-55121d266959" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.5 : 8.81814697265625); (6.46875 : 8.81814697265625); (6.46875 : 4.5112939453125)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/BlogDBContextLinqDataContext/Tag/Tag_ArticleTag" />
+      <nodes>
+        <classShapeMoniker Id="cc0b1f9e-9c22-4a42-8c12-84c25d733fbb" />
+        <classShapeMoniker Id="743b7156-c44e-4aee-9391-3801cc2ce1fd" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

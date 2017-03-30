@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="BlogDatabase" Class="BlogDBContextLinqDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=184.168.194.70;Initial Catalog=BlogDatabase;User ID=RahulD;MultipleActiveResultSets=True;Application Name=EntityFramework" SettingsObjectName="NationPost.DAL.Properties.Settings" SettingsPropertyName="BlogDatabaseConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="NP.ArticleRatings" Member="ArticleRatings">
+    <Type Name="ArticleRating">
+      <Column Name="ArticleRatingId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ArticleId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Rating" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ratingType" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IPAdditionalInfo" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="NP.Users" Member="Users">
+    <Type Name="User">
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="FirstName" Type="System.String" DbType="NVarChar(15)" CanBeNull="true" />
+      <Column Name="LastName" Type="System.String" DbType="NVarChar(15)" CanBeNull="true" />
+      <Column Name="Email" Type="System.String" DbType="NVarChar(350)" CanBeNull="true" />
+      <Column Name="Password" Type="System.String" DbType="NVarChar(15) NOT NULL" CanBeNull="false" />
+      <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="AboutMe" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="IsAboutMeVisible" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="FacebookLink" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="IsFacebookLinkVisible" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="TwitterLink" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="IsTwitterLinkVisible" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="Contact" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="IsContactVisible" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="Token" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="GoogleLink" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="IsGoogleLinkVisible" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="UserName" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Association Name="User_Article" Member="Articles" ThisKey="UserId" OtherKey="CreatedBy_UserId" Type="Article" />
+    </Type>
+  </Table>
+  <Table Name="NP.Articles" Member="Articles">
+    <Type Name="Article">
+      <Column Name="ArticleId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="Title" Type="System.String" DbType="NVarChar(250)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(250)" CanBeNull="true" />
+      <Column Name="Summary" Type="System.String" DbType="NVarChar(250)" CanBeNull="true" />
+      <Column Name="Body" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="IsValid" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="IsVisible" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="Rating" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TotalRating" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="[Like]" Member="Like" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Dislike" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Longtitude" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Latitude" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Country" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="administrative_area_level_1" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="administrative_area_level_2" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="locality" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="sublocality_level_1" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="sublocality_level_2" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="sublocality_level_3" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="IP" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="ArticleTypeId_ArticleTypeId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedBy_UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Association Name="Article_ArticleTag" Member="ArticleTags" ThisKey="ArticleId" OtherKey="article_ArticleId" Type="ArticleTag" />
+      <Association Name="User_Article" Member="User" ThisKey="CreatedBy_UserId" OtherKey="UserId" Type="User" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+      <Association Name="ArticleType_Article" Member="ArticleType" ThisKey="ArticleTypeId_ArticleTypeId" OtherKey="ArticleTypeId" Type="ArticleType" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="NP.ArticleTags" Member="ArticleTags">
+    <Type Name="ArticleTag">
+      <Column Name="ArticleTagId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="article_ArticleId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Tag_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Article_ArticleTag" Member="Article" ThisKey="article_ArticleId" OtherKey="ArticleId" Type="Article" IsForeignKey="true" />
+      <Association Name="Tag_ArticleTag" Member="Tag" ThisKey="Tag_Id" OtherKey="Id" Type="Tag" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="NP.ArticleType" Member="ArticleTypes">
+    <Type Name="ArticleType">
+      <Column Name="ArticleTypeId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="ArticleType_Article" Member="Articles" ThisKey="ArticleTypeId" OtherKey="ArticleTypeId_ArticleTypeId" Type="Article" />
+    </Type>
+  </Table>
+  <Table Name="NP.Tag" Member="Tags">
+    <Type Name="Tag">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="Tag_ArticleTag" Member="ArticleTags" ThisKey="Id" OtherKey="Tag_Id" Type="ArticleTag" />
+    </Type>
+  </Table>
+</Database>
