@@ -1,33 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
-using NationPost.API.Context;
 using NationPost.API.Models;
 using NationPost.API.Helper;
+using NationPost.DAL;
 
 namespace NationPost.API.Controllers
 {
     public class RatingsController : ApiController
     {
-        private APIContext db = new APIContext();
+        private BlogDBContextLinqDataContext db = new BlogDBContextLinqDataContext();
 
         // POST api/Ratings
-        public ResponseDTO PostArticleRatings(ArticleRatings articleRatings)
+        public ResponseDTO PostArticleRatings(Models.ArticleRatings articleRatingsModel)
         {
             if (!ModelState.IsValid)
             {
                 return new ResponseDTO() { IsSuccess = false, Message = "Model not valid, check parameters" };
             }
 
-            Article article = db.Articles.Where(k => k.ArticleId == articleRatings.ArticleId).Include(j => j.ArticleTypeId)
-                .Include(m => m.CreatedBy)
+            DAL.Article article = db.Articles.Where(k => k.ArticleId == articleRatingsModel.ArticleId)
+                //.Include(j => j.ArticleType)
+                //.Include(m => m.User)
                 .FirstOrDefault();
 
             if (article == null)
@@ -35,50 +34,48 @@ namespace NationPost.API.Controllers
                 return new ResponseDTO() { IsSuccess = false, Message = "article id incorrect" };
             }
 
-            if (articleRatings.ratingType == RatingType.RatingGiven && db.ArticleRatings.Any(k => k.ArticleId == articleRatings.ArticleId && k.IPAdditionalInfo == articleRatings.IPAdditionalInfo && k.UserId == articleRatings.UserId))
+            if (articleRatingsModel.ratingType == RatingType.RatingGiven && db.ArticleRatings.Any(k => k.ArticleId == articleRatingsModel.ArticleId && k.IPAdditionalInfo == articleRatingsModel.IPAdditionalInfo && k.UserId == articleRatingsModel.UserId))
             {
                 return new ResponseDTO() { IsSuccess = true, Message = "Already Rated" };
             }
+            
+            db.ArticleRatings.InsertOnSubmit(articleRatingsModel.ToDTO(db));
 
-            db.ArticleRatings.Add(articleRatings);
-
-            if (articleRatings.ratingType == RatingType.RatingGiven)
+            if (articleRatingsModel.ratingType == RatingType.RatingGiven)
             {
-                if (articleRatings.Rating > 5)
+                if (articleRatingsModel.Rating > 5)
                     return new ResponseDTO() { IsSuccess = false, Message = "Rating cannot be greater than 5" };
 
-                article.Rating = article.Rating + articleRatings.Rating;
+                article.Rating = article.Rating + articleRatingsModel.Rating;
                 article.TotalRating = article.TotalRating + 1;
             }
 
-            if (articleRatings.ratingType == RatingType.Liked || articleRatings.ratingType == RatingType.Disliked)
+            if (articleRatingsModel.ratingType == RatingType.Liked || articleRatingsModel.ratingType == RatingType.Disliked)
 
             {
-                var articleRating = db.ArticleRatings.FirstOrDefault(k => (k.ratingType == RatingType.Liked || k.ratingType == RatingType.Disliked)
-                && k.ArticleId == articleRatings.ArticleId && k.IPAdditionalInfo == articleRatings.IPAdditionalInfo && k.UserId == articleRatings.UserId);
+                var articleRating = db.ArticleRatings.FirstOrDefault(k => (k.ratingType == (int)RatingType.Liked || k.ratingType == (int)RatingType.Disliked)
+                && k.ArticleId == articleRatingsModel.ArticleId && k.IPAdditionalInfo == articleRatingsModel.IPAdditionalInfo && k.UserId == articleRatingsModel.UserId);
                 if (articleRating != null)
                 {
 
-                    return new ResponseDTO() { IsSuccess = true, Message = "Already " + (articleRating.ratingType == RatingType.Liked ? "Liked" : "Disliked") };
+                    return new ResponseDTO() { IsSuccess = true, Message = "Already " + (articleRating.ratingType == (int)RatingType.Liked ? "Liked" : "Disliked") };
                 }
             }
 
 
-            if (articleRatings.ratingType == RatingType.Liked)
+            if (articleRatingsModel.ratingType == RatingType.Liked)
             {
                 article.Like = article.Like + 1;
             }
 
-            if (articleRatings.ratingType == RatingType.Disliked)
+            if (articleRatingsModel.ratingType == RatingType.Disliked)
             {
                 article.Like = article.Dislike + 1;
             }
 
-            db.Articles.Attach(article);
-            db.Entry(article).State = EntityState.Modified;
             try
             {
-                db.SaveChanges();
+                db.SubmitChanges();
             }
             catch (Exception)
             {

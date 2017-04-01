@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Data;
-using System.Data.Entity.Spatial;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -21,7 +20,6 @@ namespace NationPost.API.Models
         [MaxLength(15, ErrorMessage = "Only 15 characters are allowed")]
         public String LastName { get; set; }
 
-        [Index(IsUnique = true)]
         [MaxLength(350), MinLength(2)]
         public String Email { get; set; }
 

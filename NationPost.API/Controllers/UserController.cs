@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using NationPost.API.Models;
-using NationPost.API.Context;
 using NationPost.API.Helper;
 using System.Web.SessionState;
+using NationPost.DAL;
 
 namespace NationPost.API.Controllers
 {
     public class UserController : ApiController
     {
-        private APIContext db = new APIContext();
+        private BlogDBContextLinqDataContext db = new BlogDBContextLinqDataContext();
 
         // GET api/User
         //public IEnumerable<User> GetUsers()
@@ -28,18 +26,18 @@ namespace NationPost.API.Controllers
         // GET api/User/5
 
 
-        public User GetUser(Guid id)
+        public Models.User GetUser(Guid id)
         {
-            User user = db.Users.Find(id);
+            var user = db.Users.FirstOrDefault(k => k.UserId == id);
             if (user == null)
             {
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotFound));
             }
 
-            return user;
+            return user.ToDTO();
         }
 
-        public User GetUser(string email, string password)
+        public Models.User GetUser(string email, string password)
         {
 
             throw new Exception("Moved to extended controller");
@@ -73,7 +71,7 @@ namespace NationPost.API.Controllers
         //}
 
         // POST api/User
-        public User PostUser(User user)
+        public Models.User PostUser(Models.User user)
         {
             if (ModelState.IsValid)
             {
@@ -87,15 +85,15 @@ namespace NationPost.API.Controllers
 
                     if (!db.Users.Any(k => k.Email == user.Email))
                     {
-
-                        user.CreatedOn = DateTime.Now;
-                        user.UserId = Guid.NewGuid();
-                        db.Users.Add(user);
-                        db.SaveChanges();
+                        var userDAL = user.ToDAL(db);
+                        userDAL.CreatedOn = DateTime.Now;
+                        userDAL.UserId = Guid.NewGuid();
+                        db.Users.InsertOnSubmit(userDAL);
+                        db.SubmitChanges();
 
                         //HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, user);
                         //response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = user.UserId }));
-                        return user;
+                        return userDAL.ToDTO();
                     }
                     else
                     {
@@ -109,20 +107,19 @@ namespace NationPost.API.Controllers
                         throw new Exception("Email already associated to other user");
 
                     }
-                    db.Entry(user).State = EntityState.Modified;
-
+                    var userDAL = user.ToDAL(db);
 
                     try
                     {
-                        db.SaveChanges();
+                        db.SubmitChanges();
                     }
-                    catch (DbUpdateConcurrencyException ex)
+                    catch (Exception ex)
                     {
                         throw ex;//return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
                     }
                     //HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, user);
                     //response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = user.UserId }));
-                    return user;
+                    return userDAL.ToDTO();
                 }
 
 
@@ -136,19 +133,19 @@ namespace NationPost.API.Controllers
         // DELETE api/User/5
         public HttpResponseMessage DeleteUser(Guid id)
         {
-            User user = db.Users.Find(id);
+            var user = db.Users.FirstOrDefault(k => k.UserId == id);
             if (user == null)
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound);
             }
 
-            db.Users.Remove(user);
+            db.Users.DeleteOnSubmit(user);
 
             try
             {
-                db.SaveChanges();
+                db.SubmitChanges();
             }
-            catch (DbUpdateConcurrencyException ex)
+            catch (Exception ex)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
             }

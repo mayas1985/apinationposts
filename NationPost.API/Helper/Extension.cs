@@ -10,7 +10,66 @@ namespace NationPost.API.Helper
     public static class Extension
     {
 
-        public static DAL.Article ToDAL ( this Models.Article article, BlogDBContextLinqDataContext db)
+
+        public static Models.User ToDTO(this DAL.User userDAL)
+        {
+            var user = new Models.User();
+            user.AboutMe = userDAL.AboutMe;
+            user.Contact = userDAL.Contact;
+            user.CreatedOn = userDAL.CreatedOn;
+            user.Email = userDAL.Email;
+            user.FacebookLink = userDAL.FacebookLink;
+            user.FirstName = userDAL.FirstName;
+            user.GoogleLink = userDAL.GoogleLink;
+            user.IsAboutMeVisible = userDAL.IsAboutMeVisible;
+            user.IsActive = userDAL.IsActive;
+            user.IsContactVisible = userDAL.IsContactVisible;
+            user.IsFacebookLinkVisible = userDAL.IsFacebookLinkVisible;
+            user.IsGoogleLinkVisible = userDAL.IsGoogleLinkVisible;
+            user.IsTwitterLinkVisible = userDAL.IsTwitterLinkVisible;
+            user.LastName = userDAL.LastName;
+            user.Password = userDAL.Password;
+            user.Token = userDAL.Token;
+            user.TwitterLink = userDAL.TwitterLink;
+            user.UserId = userDAL.UserId;
+            user.UserName = userDAL.UserName;
+            return user;
+
+        }
+
+        public static DAL.User ToDAL(this Models.User userModel, BlogDBContextLinqDataContext db)
+        {
+            DAL.User user = new DAL.User();
+            if (userModel.UserId != Guid.Empty)
+            {
+                user = db.Users.FirstOrDefault(k => k.UserId == userModel.UserId);
+                if (user == null)
+                    user = new DAL.User();
+            }
+            user.AboutMe = userModel.AboutMe;
+            user.Contact = userModel.Contact;
+            user.CreatedOn = userModel.CreatedOn;
+            user.Email = userModel.Email;
+            user.FacebookLink = userModel.FacebookLink;
+            user.FirstName = userModel.FirstName;
+            user.GoogleLink = userModel.GoogleLink;
+            user.IsAboutMeVisible = userModel.IsAboutMeVisible;
+            user.IsActive = userModel.IsActive;
+            user.IsContactVisible = userModel.IsContactVisible;
+            user.IsFacebookLinkVisible = userModel.IsFacebookLinkVisible;
+            user.IsGoogleLinkVisible = userModel.IsGoogleLinkVisible;
+            user.IsTwitterLinkVisible = userModel.IsTwitterLinkVisible;
+            user.LastName = userModel.LastName;
+            user.Password = userModel.Password;
+            user.Token = userModel.Token;
+            user.TwitterLink = userModel.TwitterLink;
+            user.UserId = userModel.UserId;
+            user.UserName = userModel.UserName;
+            return user;
+
+        }
+
+        public static DAL.Article ToDAL(this Models.Article article, BlogDBContextLinqDataContext db)
         {
             var articleDAL = new DAL.Article();
             articleDAL.ArticleId = article.ArticleId;
@@ -38,13 +97,18 @@ namespace NationPost.API.Helper
             articleDAL.sublocality_level_3 = article.sublocality_level_3;
 
 
-            articleDAL.CreatedBy_UserId = article.CreatedBy?.UserId?? Guid.Empty;
-            articleDAL.User.UserName = article.CreatedBy?.UserName;
-            articleDAL.User.Email = article.CreatedBy?.Email;
+            if (article.CreatedBy != null)
+            {
+                articleDAL.User = db.Users.FirstOrDefault(k => (k.UserId == article.CreatedBy.UserId && article.CreatedBy.UserId != Guid.Empty)
+               || k.UserName == article.CreatedBy.UserName
+               || k.Email == article.CreatedBy.Email);
+            }
 
+            if (article.ArticleTypeId != null)
+            {
+                articleDAL.ArticleType = db.ArticleTypes.FirstOrDefault(k => k.ArticleTypeId == article.ArticleTypeId.ArticleTypeId);
+            }
 
-            articleDAL.ArticleTypeId_ArticleTypeId = article.ArticleTypeId.ArticleTypeId;
-            
             articleDAL.IP = article.IP;
 
             foreach (var tag in article.Tags)
@@ -55,8 +119,31 @@ namespace NationPost.API.Helper
                 db.ArticleTags.InsertOnSubmit(articleTag);
             }
 
-            articleDAL.Body =  articleDAL.Body ;
+            articleDAL.Body = articleDAL.Body;
             return articleDAL;
+        }
+
+        public static DAL.ArticleRating ToDTO(this Models.ArticleRatings modelArticleRatings, BlogDBContextLinqDataContext db)
+        {
+            var articleRating = new DAL.ArticleRating();
+            if (modelArticleRatings.ArticleRatingId > 0)
+            {
+                articleRating = db.ArticleRatings.FirstOrDefault(k => k.ArticleRatingId == modelArticleRatings.ArticleRatingId);
+                if(articleRating == null)
+                {
+                    articleRating = new DAL.ArticleRating();
+                }
+            }
+
+            articleRating.ArticleRatingId = modelArticleRatings.ArticleRatingId;
+            articleRating.ArticleId = modelArticleRatings.ArticleId;
+            articleRating.UserId = modelArticleRatings.UserId;
+            articleRating.Rating = modelArticleRatings.Rating;
+            articleRating.ratingType = (int)modelArticleRatings.ratingType;
+            articleRating.IPAdditionalInfo = modelArticleRatings.IPAdditionalInfo;
+
+            return articleRating;
+
         }
 
         public static List<ArticleDTO> ToDTO(this List<Models.Article> articles, bool WithBody = false)
@@ -161,8 +248,12 @@ namespace NationPost.API.Helper
             articleDTO.Tags = new List<Models.Tag>();
             foreach (var k in article.ArticleTags)
             {
-                var tag = new Models.Tag() { Id= k.Tag?.Id??0, Name = k.Tag?.Name,
-                Description = k.Tag?.Description};
+                var tag = new Models.Tag()
+                {
+                    Id = k.Tag?.Id ?? 0,
+                    Name = k.Tag?.Name,
+                    Description = k.Tag?.Description
+                };
                 articleDTO.Tags.Add(tag);
             }
 

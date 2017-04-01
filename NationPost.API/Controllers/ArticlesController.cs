@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
-using NationPost.API.Context;
 using NationPost.API.Models;
 using PagedList;
 using NationPost.API.Helper;
-using System.Data.Entity.Validation;
 using NationPost.DAL;
 
 namespace NationPost.API.Controllers
@@ -107,7 +103,7 @@ namespace NationPost.API.Controllers
                     break;
             }
 
-            var lst = articles.Include(x => x.User).Include(m => m.ArticleType).Include(j => j.ArticleTags.Select(m => m.Tag)).ToPagedList(pageNumber, pageSize).ToList();
+            var lst = articles/*Include(x => x.User).Include(m => m.ArticleType).Include(j => j.ArticleTags.Select(m => m.Tag))*/.ToPagedList(pageNumber, pageSize).ToList();
             return lst.ToDTO();
         }
 
@@ -122,9 +118,9 @@ namespace NationPost.API.Controllers
         public IEnumerable<ArticleDTO> GetArticlesByTag(int tagId)
         {
             return db.Articles.Where(k => k.ArticleTags.Any(m => m.Tag.Id == tagId) && k.IsValid && k.IsVisible)
-                .Include(j => j.ArticleType)
-                .Include(m => m.User)
-                .Include(j => j.ArticleTags.Select(m => m.Tag))
+                //.Include(j => j.ArticleType)
+                //.Include(m => m.User)
+                //.Include(j => j.ArticleTags.Select(m => m.Tag))
                 .ToList().ToDTO();
         }
 
@@ -135,9 +131,10 @@ namespace NationPost.API.Controllers
         public IHttpActionResult GetArticle(Guid id)
         {
             var article = db.Articles.Where(k => k.ArticleId == id)
-                .Include(j => j.ArticleType)
-                .Include(m => m.User)
-                .Include(j => j.ArticleTags.Select(m => m.Tag)).FirstOrDefault();
+                //.Include(j => j.ArticleType)
+                //.Include(m => m.User)
+                //.Include(j => j.ArticleTags.Select(m => m.Tag))
+                .FirstOrDefault();
             if (article == null)
             {
                 return NotFound();
@@ -170,14 +167,7 @@ namespace NationPost.API.Controllers
             var mailNeedsToBeSent = false;
             DAL.User newuser = null;
 
-            var user = db.Users.FirstOrDefault(j => j.UserId == articleDAL.User.UserId || j.Email == articleDAL.User.Email);
-            if (user != null)
-            {
-                articleDAL.User = user;
-                articleDAL.CreatedBy_UserId = user.UserId;
-
-            }
-            else
+            if(articleDAL.User == null)
             {
                 newuser = new DAL.User();
                 newuser.CreatedOn = DateTime.Now;
@@ -196,20 +186,7 @@ namespace NationPost.API.Controllers
 
 
             }
-            if (articleDAL.ArticleType != null)
-            {
-                var articleType = db.ArticleTypes.FirstOrDefault(j => j.ArticleTypeId == articleDAL.ArticleTypeId_ArticleTypeId);
-                if (articleType != null)
-                {
-                    articleDAL.ArticleType = articleType;
-
-                }
-                else
-                {
-                    throw new Exception("Articletype info not found");
-                }
-            }
-            else
+            if (articleDAL.ArticleType == null)
             {
                 throw new Exception("Articletype info not found");
             }
@@ -234,20 +211,9 @@ namespace NationPost.API.Controllers
                     MailHelper.Send("Your Username is " + newuser.Email + " and password is " + newuser.Password, "NationPost - Password retrieval", "admin@nationpost.com", newuser.Email);
                 }
             }
-            catch (DbEntityValidationException dex)
+            catch (Exception dex)
             {
                 throw;
-            }
-            catch (DbUpdateException)
-            {
-                if (ArticleExists(articleDAL.ArticleId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
             }
             ////TODO later: fix self referencing loop
             //article.CreatedBy.Articles = null;
