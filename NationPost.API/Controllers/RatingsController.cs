@@ -34,11 +34,15 @@ namespace NationPost.API.Controllers
                 return new ResponseDTO() { IsSuccess = false, Message = "article id incorrect" };
             }
 
-            if (articleRatingsModel.ratingType == RatingType.RatingGiven && db.ArticleRatings.Any(k => k.ArticleId == articleRatingsModel.ArticleId && k.IPAdditionalInfo == articleRatingsModel.IPAdditionalInfo && k.UserId == articleRatingsModel.UserId))
+            if (articleRatingsModel.ratingType == RatingType.RatingGiven && 
+                        db.ArticleRatings.Any(k => k.ratingType == (int)RatingType.RatingGiven 
+                        && k.ArticleId == articleRatingsModel.ArticleId && k.IPAdditionalInfo == articleRatingsModel.IPAdditionalInfo && 
+                      (articleRatingsModel.UserId == null || k.UserId == articleRatingsModel.UserId )
+                      ))
             {
                 return new ResponseDTO() { IsSuccess = true, Message = "Already Rated" };
             }
-            
+
             db.ArticleRatings.InsertOnSubmit(articleRatingsModel.ToDTO(db));
 
             if (articleRatingsModel.ratingType == RatingType.RatingGiven)
@@ -54,7 +58,7 @@ namespace NationPost.API.Controllers
 
             {
                 var articleRating = db.ArticleRatings.FirstOrDefault(k => (k.ratingType == (int)RatingType.Liked || k.ratingType == (int)RatingType.Disliked)
-                && k.ArticleId == articleRatingsModel.ArticleId && k.IPAdditionalInfo == articleRatingsModel.IPAdditionalInfo && k.UserId == articleRatingsModel.UserId);
+                && k.ArticleId == articleRatingsModel.ArticleId && k.IPAdditionalInfo == articleRatingsModel.IPAdditionalInfo && (articleRatingsModel.UserId == null || k.UserId == articleRatingsModel.UserId));
                 if (articleRating != null)
                 {
 
