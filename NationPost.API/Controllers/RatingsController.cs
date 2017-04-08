@@ -74,7 +74,7 @@ namespace NationPost.API.Controllers
 
             if (articleRatingsModel.ratingType == RatingType.Disliked)
             {
-                article.Like = article.Dislike + 1;
+                article.Dislike = article.Dislike + 1;
             }
 
             try
