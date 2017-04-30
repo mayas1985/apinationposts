@@ -13,6 +13,8 @@ namespace NationPost.API.Helper
 
         public static Models.User ToDTO(this DAL.User userDAL)
         {
+            if (userDAL == null) return null;
+
             var user = new Models.User();
             user.AboutMe = userDAL.AboutMe;
             user.Contact = userDAL.Contact;
@@ -111,14 +113,17 @@ namespace NationPost.API.Helper
 
             articleDAL.IP = article.IP;
 
-            foreach (var tag in article.Tags)
+            if (article.Tags != null)
             {
-                var articleTag = new DAL.ArticleTag();
-                articleTag.Article = articleDAL;
-                articleTag.Tag = db.Tags.FirstOrDefault(k => k.Id == tag.Id);
-                db.ArticleTags.InsertOnSubmit(articleTag);
-            }
+                foreach (var tag in article.Tags)
+                {
+                    var articleTag = new DAL.ArticleTag();
+                    articleTag.Article = articleDAL;
+                    articleTag.Tag = db.Tags.FirstOrDefault(k => k.Id == tag.Id);
+                    db.ArticleTags.InsertOnSubmit(articleTag);
+                }
 
+            }
             articleDAL.Body = articleDAL.Body;
             return articleDAL;
         }
@@ -129,7 +134,7 @@ namespace NationPost.API.Helper
             if (modelArticleRatings.ArticleRatingId > 0)
             {
                 articleRating = db.ArticleRatings.FirstOrDefault(k => k.ArticleRatingId == modelArticleRatings.ArticleRatingId);
-                if(articleRating == null)
+                if (articleRating == null)
                 {
                     articleRating = new DAL.ArticleRating();
                 }
