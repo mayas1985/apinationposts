@@ -221,7 +221,7 @@ namespace NationPost.API.Helper
         {
             ArticleDTO articleDTO = new ArticleDTO();
             articleDTO.ArticleId = article.ArticleId;
-            articleDTO.CreatedOn = article.CreatedOn;
+            articleDTO.CreatedOn = article.CreatedOn.ToLocalTime();
             articleDTO.Title = article.Title;
             articleDTO.Description = article.Description;
             articleDTO.Summary = article.Summary;

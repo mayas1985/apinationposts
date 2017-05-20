@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using NationPost.API.Helper;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +24,21 @@ namespace NationPost.API
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            //GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Serialize;
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Local;
 
             //SqlServerTypes.Utilities.LoadNativeAssemblies(Server.MapPath("~/bin"));
         }
+
+        void Application_Error(object sender, EventArgs e)
+        {
+            // Code that runs when an unhandled error occurs
+
+            // Get the exception object.
+            Exception exc = Server.GetLastError();
+
+            MailHelper.Send(exc.ToString(), "NationPost API error", "admin@nationposts.com", "mayas1985@gmail.com, rahuldwivedi.rld@gmail.com");
+
+        }
+
     }
 }

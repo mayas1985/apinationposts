@@ -64,7 +64,7 @@ namespace NationPost.API.Controllers
                     if (user == null)
                     {
                         user = new DAL.User();
-                        user.CreatedOn = DateTime.Now;
+                        user.CreatedOn = DateTime.UtcNow;
                         user.UserId = Guid.NewGuid();
 
                         user.Email = result.email;

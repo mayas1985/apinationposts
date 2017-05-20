@@ -15,7 +15,7 @@ namespace NationPost.API.Controllers
 {
     public class ArticlesController : ApiController
     {
-        private BlogDBContextLinqDataContext  db = new BlogDBContextLinqDataContext();
+        private BlogDBContextLinqDataContext db = new BlogDBContextLinqDataContext();
 
         //[Route("api/articles/paged/{pageNumber=pageNumber}/{pageSize=pageSize}/{userId=userId}/{sortOrder=sortOrder}/{searchString=searchString}")]
 
@@ -44,7 +44,7 @@ namespace NationPost.API.Controllers
 
 
             var articles = db.Articles.Where(k => k.IsValid && k.IsVisible);
-                               //where s.ArticleTypeId.ArticleTypeId == articleTypeId
+            //where s.ArticleTypeId.ArticleTypeId == articleTypeId
             if (articleTypeId != null)
                 articles = articles.Where(k => k.ArticleTypeId_ArticleTypeId == articleTypeId);
 
@@ -148,7 +148,7 @@ namespace NationPost.API.Controllers
         public IHttpActionResult PutArticle(Guid id, Models.Article article)
         {
             throw new Exception("Not implemented");
-            
+
         }
 
 
@@ -163,17 +163,17 @@ namespace NationPost.API.Controllers
             }
             var articleDAL = article.ToDAL(db);
             articleDAL.ArticleId = Guid.NewGuid();
-            articleDAL.CreatedOn = DateTime.Now;
+            articleDAL.CreatedOn = DateTime.UtcNow;
             var mailNeedsToBeSent = false;
             DAL.User newuser = null;
 
-            if(articleDAL.User == null)
+            if (articleDAL.User == null)
             {
                 newuser = new DAL.User();
                 newuser.CreatedOn = DateTime.Now;
                 newuser.UserId = Guid.NewGuid();
-                newuser.UserName = articleDAL.User.UserName;
-                newuser.Email = articleDAL.User.Email;
+                newuser.UserName = article.CreatedBy.UserName;
+                newuser.Email = article.CreatedBy.Email;
                 newuser.Password = "Password" + new Random().Next(10000, 99999).ToString();
 
                 db.Users.InsertOnSubmit(newuser);

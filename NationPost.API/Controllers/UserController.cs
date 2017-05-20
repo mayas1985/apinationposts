@@ -86,7 +86,7 @@ namespace NationPost.API.Controllers
                     if (!db.Users.Any(k => k.Email == user.Email))
                     {
                         var userDAL = user.ToDAL(db);
-                        userDAL.CreatedOn = DateTime.Now;
+                        userDAL.CreatedOn = DateTime.UtcNow;
                         userDAL.UserId = Guid.NewGuid();
                         db.Users.InsertOnSubmit(userDAL);
                         db.SubmitChanges();
