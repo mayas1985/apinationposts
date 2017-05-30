@@ -20,7 +20,7 @@ namespace NationPost.API.Controllers
         public IQueryable<Models.Tag> GetTags(string search = "")
         {
 
-            var query =   string.IsNullOrWhiteSpace(search)? db.Tags.Take(10):db.Tags.Where(k=> k.Name.StartsWith(search));
+            var query =   string.IsNullOrWhiteSpace(search)? db.Tags:db.Tags.Where(k=> k.Name.StartsWith(search));
             return query.Select(k => new Models.Tag
             {
                 Description = k.Description,
